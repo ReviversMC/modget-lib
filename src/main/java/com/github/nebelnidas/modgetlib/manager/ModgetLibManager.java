@@ -23,13 +23,14 @@ public class ModgetLibManager {
 	private int ignoredModsCount = 0;
 
 
-	public void init(ArrayList<RecognizedMod> installedMods, String minecraftVersion) {
-		this.installedMods = installedMods;
+	public void init(String minecraftVersion, ArrayList<RecognizedMod> installedMods) {
 		this.minecraftVersion = minecraftVersion;
-		reload();
+		reload(installedMods);
 	}
 
-	public void reload() {
+	public void reload(ArrayList<RecognizedMod> installedMods) {
+		this.installedMods = installedMods;
+
 		for (Repository repo : REPO_MANAGER.getRepos()) {
 			repo.refreshLookupTableNoException();
 		}
