@@ -1,4 +1,4 @@
-package com.github.nebelnidas.modget.data;
+package com.github.nebelnidas.modgetlib.data;
 
 import java.io.File;
 import java.net.URL;
