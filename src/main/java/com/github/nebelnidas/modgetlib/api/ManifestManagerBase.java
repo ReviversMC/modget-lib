@@ -9,8 +9,6 @@ import com.github.nebelnidas.modgetlib.data.Package;
 import com.github.nebelnidas.modgetlib.data.RecognizedMod;
 import com.github.nebelnidas.modgetlib.data.Repository;
 
-import org.apache.logging.log4j.LogManager;
-
 public class ManifestManagerBase {
 
 	public String assembleManifestUri(Repository repo, String publisher, String modId) {

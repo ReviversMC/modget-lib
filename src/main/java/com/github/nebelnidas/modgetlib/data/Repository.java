@@ -1,6 +1,5 @@
 package com.github.nebelnidas.modgetlib.data;
 
-import java.io.File;
 import java.net.URL;
 import java.net.UnknownHostException;
 
