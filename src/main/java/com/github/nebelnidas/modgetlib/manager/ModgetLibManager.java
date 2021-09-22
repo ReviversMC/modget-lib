@@ -23,8 +23,9 @@ public class ModgetLibManager {
 	private int ignoredModsCount = 0;
 
 
-	public void init(String minecraftVersion, ArrayList<RecognizedMod> installedMods) {
+	public void init(String minecraftVersion, ArrayList<String> repoUris, ArrayList<RecognizedMod> installedMods) {
 		this.minecraftVersion = minecraftVersion;
+		REPO_MANAGER.init(repoUris);
 		reload(installedMods);
 	}
 
