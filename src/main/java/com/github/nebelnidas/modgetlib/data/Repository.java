@@ -45,10 +45,8 @@ public class Repository {
 			return newLookupTable;
         } catch (Exception e) {
 			if (e instanceof UnknownHostException) {
-				// Modget.logWarn(new TranslatableText("error." + Modget.NAMESPACE + ".github_connection_error"));
 				ModgetLib.logWarn("Couldn't connect to the manifest repository. Please check your Internet connection!");
 			} else {
-				// Modget.logWarn(new TranslatableText("error." + Modget.NAMESPACE + ".lookup_table_access_error"), e.getMessage());
 				ModgetLib.logWarn("Couldn't connect to the manifest repository", e.getMessage());
 			}
 			throw e;

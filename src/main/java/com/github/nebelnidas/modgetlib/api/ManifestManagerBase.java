@@ -17,7 +17,7 @@ public interface ManifestManagerBase {
 		try {
 			return new String(String.format("%s/manifests/%s/%s/%s/%s.%s.yaml", repo.getUri(), (""+publisher.charAt(0)).toUpperCase(), publisher, modId, publisher, modId));
 		} catch (Exception e) {
-			// ModgetLib.logWarn(String.format("An error occurred while assembling the Repo%s.%s.%s manifest uri", repo.getId(), publisher, modId), e.getMessage());
+			ModgetLib.logWarn(String.format("An error occurred while assembling the Repo%s.%s.%s manifest uri", repo.getId(), publisher, modId), e.getMessage());
 			return null;
 		}
 	}
@@ -54,7 +54,7 @@ public interface ManifestManagerBase {
 						recognizedMods.get(i).addAvailablePackage(p);
 
 					} catch (Exception e) {
-						// ModgetLib.logWarn(String.format("An error occurred while parsing the Repo%s.%s.%s manifest", repo.getId(), packageIdParts[0], packageIdParts[1]), e.getMessage());
+						ModgetLib.logWarn(String.format("An error occurred while parsing the Repo%s.%s.%s manifest", repo.getId(), packageIdParts[0], packageIdParts[1]), e.getMessage());
 					}
 				}
 			}
