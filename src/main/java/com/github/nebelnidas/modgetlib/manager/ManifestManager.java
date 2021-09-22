@@ -6,9 +6,9 @@ import java.net.URL;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.github.nebelnidas.modgetlib.ModgetLib;
+import com.github.nebelnidas.modgetlib.api.ManifestManagerBase;
 import com.github.nebelnidas.modgetlib.data.Manifest;
 import com.github.nebelnidas.modgetlib.data.Repository;
-import com.github.nebelnidas.modgetlib.api.ManifestManagerBase;
 
 public class ManifestManager extends ManifestManagerBase {
 

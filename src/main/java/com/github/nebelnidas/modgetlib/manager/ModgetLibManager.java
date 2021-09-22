@@ -13,21 +13,19 @@ import com.github.nebelnidas.modgetlib.data.Repository;
 import org.apache.commons.text.WordUtils;
 import org.gradle.util.VersionNumber;
 
-public class MainManager {
+public class ModgetLibManager {
 	public final RepoManager REPO_MANAGER = new RepoManager();
 	public final ManifestManager MANIFEST_MANAGER = new ManifestManager();
 
-	private ArrayList<RecognizedMod> allMods = new ArrayList<RecognizedMod>();
+	private ArrayList<RecognizedMod> installedMods = new ArrayList<RecognizedMod>();
 	private ArrayList<RecognizedMod> recognizedMods = new ArrayList<RecognizedMod>();
 	private String minecraftVersion;
 	private int ignoredModsCount = 0;
 
-	public MainManager(String minecraftVersion, ArrayList<RecognizedMod> installedMods) {
+
+	public void init(ArrayList<RecognizedMod> installedMods, String minecraftVersion) {
+		this.installedMods = installedMods;
 		this.minecraftVersion = minecraftVersion;
-		this.allMods = installedMods;
-	}
-	
-	public void init() {
 		reload();
 	}
 
@@ -44,7 +42,7 @@ public class MainManager {
 		ArrayList<Repository> repos = REPO_MANAGER.getRepos();
 		recognizedMods.clear();
 
-		for (RecognizedMod mod : allMods) {
+		for (RecognizedMod mod : installedMods) {
 			// If mod is contained in built-in ignored list, skip it
 			if (ModgetConfig.IGNORED_MODS.contains(mod.getId())) {
 				ignoredModsCount++;
@@ -94,7 +92,7 @@ public class MainManager {
 			}
 		}
 		if (message.length() != 0) {message.insert(0, ": ");}
-		ModgetLib.logInfo(String.format("Recognized %s out of %s mods%s", modCount, allMods.size() - ignoredModsCount, message.toString()));
+		ModgetLib.logInfo(String.format("Recognized %s out of %s mods%s", modCount, installedMods.size() - ignoredModsCount, message.toString()));
 	}
 
 
