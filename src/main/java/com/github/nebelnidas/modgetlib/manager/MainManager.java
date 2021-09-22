@@ -2,29 +2,30 @@ package com.github.nebelnidas.modgetlib.manager;
 
 import java.util.ArrayList;
 
-import com.github.nebelnidas.modgetlib.Modget;
+import com.github.nebelnidas.modgetlib.ModgetLib;
 import com.github.nebelnidas.modgetlib.config.ModgetConfig;
 import com.github.nebelnidas.modgetlib.data.LookupTableEntry;
 import com.github.nebelnidas.modgetlib.data.ManifestModVersion;
 import com.github.nebelnidas.modgetlib.data.Package;
 import com.github.nebelnidas.modgetlib.data.RecognizedMod;
 import com.github.nebelnidas.modgetlib.data.Repository;
-import com.github.nebelnidas.modgetlib.util.Util;
 
 import org.apache.commons.text.WordUtils;
-
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.SemanticVersion;
-import net.fabricmc.loader.api.VersionParsingException;
+import org.gradle.util.VersionNumber;
 
 public class MainManager {
 	public final RepoManager REPO_MANAGER = new RepoManager();
 	public final ManifestManager MANIFEST_MANAGER = new ManifestManager();
 
+	private ArrayList<RecognizedMod> allMods = new ArrayList<RecognizedMod>();
 	private ArrayList<RecognizedMod> recognizedMods = new ArrayList<RecognizedMod>();
+	private String minecraftVersion;
 	private int ignoredModsCount = 0;
 
+	public MainManager(String minecraftVersion, ArrayList<RecognizedMod> installedMods) {
+		this.minecraftVersion = minecraftVersion;
+		this.allMods = installedMods;
+	}
 	
 	public void init() {
 		reload();
@@ -43,9 +44,9 @@ public class MainManager {
 		ArrayList<Repository> repos = REPO_MANAGER.getRepos();
 		recognizedMods.clear();
 
-		for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
+		for (RecognizedMod mod : allMods) {
 			// If mod is contained in built-in ignored list, skip it
-			if (ModgetConfig.IGNORED_MODS.contains(mod.getMetadata().getId())) {
+			if (ModgetConfig.IGNORED_MODS.contains(mod.getId())) {
 				ignoredModsCount++;
 				continue;
 			}
@@ -57,10 +58,10 @@ public class MainManager {
 				lookupTableEntryLoop:
 				for (LookupTableEntry lookupTableEntry : repos.get(i).getLookupTable().getLookupTableEntries()) {
 					// ...to check if the mod IDs match.
-					if (lookupTableEntry.getId().equalsIgnoreCase(mod.getMetadata().getId())) {
+					if (lookupTableEntry.getId().equalsIgnoreCase(mod.getId())) {
 						// If they match, check if it has already been found before (in a different repo)
 						for (RecognizedMod recognizedMod : recognizedMods) {
-							if (recognizedMod.getId().equals(mod.getMetadata().getId())) {
+							if (recognizedMod.getId().equals(mod.getId())) {
 								// If so, just add the data to the existing recognized mod
 								recognizedMod.addLookupTableEntry(lookupTableEntry);
 								// ...and skip ahead to the next mod.
@@ -69,8 +70,8 @@ public class MainManager {
 						}
 						// Otherwise, create a new one
 						recognizedMods.add(new RecognizedMod() {{
-							setId(mod.getMetadata().getId());
-							setCurrentVersion(mod.getMetadata().getVersion().getFriendlyString());
+							setId(mod.getId());
+							setCurrentVersion(mod.getCurrentVersion());
 							addLookupTableEntry(lookupTableEntry);
 						}});
 						// ...and skip ahead to the next mod.
@@ -93,13 +94,13 @@ public class MainManager {
 			}
 		}
 		if (message.length() != 0) {message.insert(0, ": ");}
-		Modget.logInfo(String.format("Recognized %s out of %s mods%s", modCount, FabricLoader.getInstance().getAllMods().size() - ignoredModsCount, message.toString()));
+		ModgetLib.logInfo(String.format("Recognized %s out of %s mods%s", modCount, allMods.size() - ignoredModsCount, message.toString()));
 	}
 
 
 	public ManifestModVersion findModVersionMatchingCurrentMinecraftVersion(Package p) {
 		for (ManifestModVersion version : p.getManifestModVersions()) {
-			if (version.getMinecraftVersions().contains(Util.getMinecraftVersion().getId())) {
+			if (version.getMinecraftVersions().contains(minecraftVersion)) {
 				return(version);
 			}
 		}
@@ -115,7 +116,7 @@ public class MainManager {
 			mod.setUpdateAvailable(false);
 
 			if (mod.getAvailablePackages().size() > 1) {
-				Modget.logInfo(String.format("There are multiple packages available for %s", WordUtils.capitalize(mod.getId())));
+				ModgetLib.logInfo(String.format("There are multiple packages available for %s", WordUtils.capitalize(mod.getId())));
 			}
 			for (int j = 0; j < mod.getAvailablePackages().size(); j++) {
 				Package p = mod.getAvailablePackages().get(j);
@@ -125,18 +126,19 @@ public class MainManager {
 				p.setLatestCompatibleModVersion(latestManifestModVersion);
 
 				// Try parsing the semantic manifest and mod versions
-				SemanticVersion currentVersion;
+				VersionNumber currentVersion;
 				try {
-					currentVersion = SemanticVersion.parse(mod.getCurrentVersion());
-				} catch (VersionParsingException e) {
-					Modget.logWarn(String.format("%s doesn't respect semantic versioning, an update check is therefore not possible! %s", p.getName(), e.getMessage()));
+					currentVersion = VersionNumber.parse(mod.getCurrentVersion());
+				} catch (Exception e) {
+					ModgetLib.logWarn(String.format("%s doesn't respect semantic versioning, an update check is therefore not possible! %s", p.getName(), e.getMessage()));
 					break;
 				}
-				SemanticVersion latestVersion;
+
+				VersionNumber latestVersion;
 				try {
-					latestVersion = SemanticVersion.parse(latestManifestModVersion.getVersion());
-				} catch (VersionParsingException e) {
-					Modget.logWarn(String.format("The %s manifest doesn't respect semantic versioning, an update check is therefore not possible!", p.getName()), e.getMessage());
+					latestVersion = VersionNumber.parse(latestManifestModVersion.getVersion());
+				} catch (Exception e) {
+					ModgetLib.logWarn(String.format("The %s manifest doesn't respect semantic versioning, an update check is therefore not possible!", p.getName()), e.getMessage());
 					continue;
 				}
 
@@ -144,13 +146,13 @@ public class MainManager {
 				String packageId = String.format("Repo%s.%s.%s",
 					p.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
 					p.getPublisher(), p.getParentLookupTableEntry().getId());
-				if (latestManifestModVersion != null && latestVersion.compareTo(currentVersion) > 0) {
-					Modget.logInfo(String.format("Found an update for %s: %s %s", p.getName(),
-						packageId, latestVersion.getFriendlyString()));
-					mod.setUpdateAvailable(true);
 
+				if (latestManifestModVersion != null && latestVersion.compareTo(currentVersion) > 0) {
+					ModgetLib.logInfo(String.format("Found an update for %s: %s %s", p.getName(),
+						packageId, latestVersion.toString()));
+					mod.setUpdateAvailable(true);
 				} else {
-					Modget.logInfo(String.format("No update has been found at %s", packageId));
+					ModgetLib.logInfo(String.format("No update has been found at %s", packageId));
 				}
 			}
 		}

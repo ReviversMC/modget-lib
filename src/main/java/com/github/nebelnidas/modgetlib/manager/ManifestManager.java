@@ -5,10 +5,10 @@ import java.net.URL;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.github.nebelnidas.modgetlib.Modget;
+import com.github.nebelnidas.modgetlib.ModgetLib;
 import com.github.nebelnidas.modgetlib.data.Manifest;
 import com.github.nebelnidas.modgetlib.data.Repository;
-import com.github.nebelnidas.modgetlib.manager.base.ManifestManagerBase;
+import com.github.nebelnidas.modgetlib.api.ManifestManagerBase;
 
 public class ManifestManager extends ManifestManagerBase {
 
@@ -23,13 +23,13 @@ public class ManifestManager extends ManifestManagerBase {
 			manifest = mapper.readValue(new URL(uri), Manifest.class);
 		} catch (Exception e) {
 			if (e instanceof IOException) {
-				Modget.logWarn(String.format("An error occurred while fetching the %s manifest. Please check your Internet connection!", packageId));
+				ModgetLib.logWarn(String.format("An error occurred while fetching the %s manifest. Please check your Internet connection!", packageId));
 			} else {
-				Modget.logWarn(String.format("An error occurred while parsing the %s manifest", packageId), e.getMessage());
+				ModgetLib.logWarn(String.format("An error occurred while parsing the %s manifest", packageId), e.getMessage());
 			}
 			return null;
 		}
-		Modget.logInfo(String.format("Fetched Manifest: %s", packageId));
+		ModgetLib.logInfo(String.format("Fetched Manifest: %s", packageId));
 		return manifest;
 	}
 

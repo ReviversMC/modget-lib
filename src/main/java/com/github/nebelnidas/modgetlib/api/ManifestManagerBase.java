@@ -11,9 +11,9 @@ import com.github.nebelnidas.modgetlib.data.Repository;
 
 import org.apache.logging.log4j.LogManager;
 
-public interface ManifestManagerBase {
+public class ManifestManagerBase {
 
-	default String assembleManifestUri(Repository repo, String publisher, String modId) {
+	public String assembleManifestUri(Repository repo, String publisher, String modId) {
 		try {
 			return new String(String.format("%s/manifests/%s/%s/%s/%s.%s.yaml", repo.getUri(), (""+publisher.charAt(0)).toUpperCase(), publisher, modId, publisher, modId));
 		} catch (Exception e) {
@@ -22,9 +22,11 @@ public interface ManifestManagerBase {
 		}
 	}
 
-	public Manifest downloadManifest(Repository repo, String modId, String packageIdParts);
+	public Manifest downloadManifest(Repository repo, String modId, String packageIdParts) {
+		return null;
+	}
 
-	default ArrayList<RecognizedMod> downloadManifests(ArrayList<RecognizedMod> recognizedMods) {
+	public ArrayList<RecognizedMod> downloadManifests(ArrayList<RecognizedMod> recognizedMods) {
 
 		for (int i = 0; i < recognizedMods.size(); i++) {
 			RecognizedMod mod = recognizedMods.get(i);

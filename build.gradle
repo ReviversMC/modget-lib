@@ -21,26 +21,32 @@ repositories {
     maven {
         url = "https://mvnrepository.com/"
     }
+    maven {
+        url = "https://repo.gradle.org/gradle/libs-releases-local/"
+    }
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing
+    // JUnit Jupiter for testing
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
 
-    // Log4j
+    // log4j for Minecraft compatible logging
     implementation "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
     implementation "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
 
-    // Jackson
+    // gradle-core for semver operations
+    compileOnly "org.gradle:gradle-core:${project.gradle_core_version}"
+
+    // jackson for reading YAML
 	implementation "com.fasterxml.jackson.core:jackson-core:${project.jackson_version}"
 	implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.jackson_dataformat_yaml_version}"
 	implementation "com.fasterxml.jackson.core:jackson-databind:${project.jackson_version}"
     implementation "com.fasterxml.jackson.core:jackson-annotations:${project.jackson_version}"
 
-    // commons-text
+    // commons-text for capitalizing text
     implementation "org.apache.commons:commons-text:${project.commons_text_version}"
 
-    // Spotbugs
+    // spotbugs
     compileOnly "com.github.spotbugs:spotbugs:${project.spotbugs_version}"
 }
 
