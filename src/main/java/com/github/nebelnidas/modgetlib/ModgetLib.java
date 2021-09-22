@@ -1,7 +1,7 @@
 package com.github.nebelnidas.modgetlib;
 
-import org.apache.logging.log4j.Logger.LogManager;
-import org.apache.logging.log4j.Logger.Log;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ModgetLib {
     public static final String NAMESPACE = "modget-lib";

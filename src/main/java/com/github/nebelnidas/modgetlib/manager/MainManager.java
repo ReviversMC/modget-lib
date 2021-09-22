@@ -2,14 +2,14 @@ package com.github.nebelnidas.modgetlib.manager;
 
 import java.util.ArrayList;
 
-import com.github.nebelnidas.modget.Modget;
-import com.github.nebelnidas.modget.config.ModgetConfig;
-import com.github.nebelnidas.modget.data.LookupTableEntry;
-import com.github.nebelnidas.modget.data.ManifestModVersion;
-import com.github.nebelnidas.modget.data.Package;
-import com.github.nebelnidas.modget.data.RecognizedMod;
-import com.github.nebelnidas.modget.data.Repository;
-import com.github.nebelnidas.modget.util.Util;
+import com.github.nebelnidas.modgetlib.Modget;
+import com.github.nebelnidas.modgetlib.config.ModgetConfig;
+import com.github.nebelnidas.modgetlib.data.LookupTableEntry;
+import com.github.nebelnidas.modgetlib.data.ManifestModVersion;
+import com.github.nebelnidas.modgetlib.data.Package;
+import com.github.nebelnidas.modgetlib.data.RecognizedMod;
+import com.github.nebelnidas.modgetlib.data.Repository;
+import com.github.nebelnidas.modgetlib.util.Util;
 
 import org.apache.commons.text.WordUtils;
 
