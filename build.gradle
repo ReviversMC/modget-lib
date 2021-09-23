@@ -82,7 +82,7 @@ shadowJar {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-            artifact(remapJar) {
+            artifact(shadowJar) {
                 builtBy shadowJar
             }
         }
