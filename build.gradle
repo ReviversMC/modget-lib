@@ -1,6 +1,7 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
@@ -76,4 +77,21 @@ jar {
 
 shadowJar {
     configurations = [project.configurations.shadow] // ***
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+            artifact(remapJar) {
+                builtBy shadowJar
+            }
+        }
+    }
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        maven {
+            mavenLocal()
+        }
+    }
 }
