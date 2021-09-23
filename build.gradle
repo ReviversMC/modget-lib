@@ -35,7 +35,7 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
 
     // gradle-core for semver operations
-    compileOnly "org.gradle:gradle-core:${project.gradle_core_version}"
+    implementation "org.gradle:gradle-core:${project.gradle_core_version}"
 
     // jackson for reading YAML
 	implementation "com.fasterxml.jackson.core:jackson-core:${project.jackson_version}"
