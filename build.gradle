@@ -35,9 +35,6 @@ dependencies {
     shadow "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
     shadow "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
 
-    // gradle-core for semver operations
-    shadow "org.gradle:gradle-core:${project.gradle_core_version}"
-
     // jackson for reading YAML
 	shadow "com.fasterxml.jackson.core:jackson-core:${project.jackson_version}"
 	shadow "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.jackson_dataformat_yaml_version}"

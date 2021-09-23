@@ -9,9 +9,10 @@ import com.github.nebelnidas.modgetlib.data.ManifestModVersion;
 import com.github.nebelnidas.modgetlib.data.Package;
 import com.github.nebelnidas.modgetlib.data.RecognizedMod;
 import com.github.nebelnidas.modgetlib.data.Repository;
+import com.github.nebelnidas.modgetlib.fabricmc.loader.api.SemanticVersion;
+import com.github.nebelnidas.modgetlib.fabricmc.loader.api.VersionParsingException;
 
 import org.apache.commons.text.WordUtils;
-import org.gradle.util.VersionNumber;
 
 public class ModgetLibManager {
 	public final RepoManager REPO_MANAGER = new RepoManager();
@@ -126,18 +127,18 @@ public class ModgetLibManager {
 				p.setLatestCompatibleModVersion(latestManifestModVersion);
 
 				// Try parsing the semantic manifest and mod versions
-				VersionNumber currentVersion;
+				SemanticVersion currentVersion;
 				try {
-					currentVersion = VersionNumber.parse(mod.getCurrentVersion());
-				} catch (Exception e) {
+					currentVersion = SemanticVersion.parse(mod.getCurrentVersion());
+				} catch (VersionParsingException e) {
 					ModgetLib.logWarn(String.format("%s doesn't respect semantic versioning, an update check is therefore not possible! %s", p.getName(), e.getMessage()));
 					break;
 				}
 
-				VersionNumber latestVersion;
+				SemanticVersion latestVersion;
 				try {
-					latestVersion = VersionNumber.parse(latestManifestModVersion.getVersion());
-				} catch (Exception e) {
+					latestVersion = SemanticVersion.parse(latestManifestModVersion.getVersion());
+				} catch (VersionParsingException e) {
 					ModgetLib.logWarn(String.format("The %s manifest doesn't respect semantic versioning, an update check is therefore not possible!", p.getName()), e.getMessage());
 					continue;
 				}
