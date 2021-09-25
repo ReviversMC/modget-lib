@@ -76,8 +76,8 @@ jar {
 }
 
 shadowJar {
-    configurations = [project.configurations.shadow] // ***
-    archiveFileName = "${project.archivesBaseName}-${project.version}.${extension}"
+    configurations = [project.configurations.shadow]
+    archiveClassifier.set("")
 }
 
 publishing {
