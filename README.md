@@ -14,5 +14,5 @@ repositories {
 
 And then add modget-lib to your dependencies:
 ```gradle
-implementation "com.github.ReviversMC:modget-lib:${modget_lib_version}:all"
+implementation "com.github.ReviversMC:modget-lib:${modget_lib_version}"
 ```
