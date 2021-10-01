@@ -9,7 +9,7 @@ import com.github.nebelnidas.modgetlib.data.Package;
 import com.github.nebelnidas.modgetlib.data.RecognizedMod;
 import com.github.nebelnidas.modgetlib.data.Repository;
 
-public class ManifestManagerBase {
+public abstract class ManifestManagerBase {
 
 	public String assembleManifestUri(Repository repo, String publisher, String modId) {
 		try {
@@ -20,9 +20,7 @@ public class ManifestManagerBase {
 		}
 	}
 
-	public Manifest downloadManifest(Repository repo, String modId, String packageIdParts) {
-		return null;
-	}
+	public abstract Manifest downloadManifest(Repository repo, String modId, String packageIdParts);
 
 	public ArrayList<RecognizedMod> downloadManifests(ArrayList<RecognizedMod> recognizedMods) {
 

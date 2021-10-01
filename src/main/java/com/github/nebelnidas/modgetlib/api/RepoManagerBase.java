@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.github.nebelnidas.modgetlib.ModgetLib;
 import com.github.nebelnidas.modgetlib.data.Repository;
 
-public class RepoManagerBase {
+public abstract class RepoManagerBase {
 	protected ArrayList<Repository> repos = new ArrayList<Repository>();
 	protected int lastId = -1;
 
@@ -16,7 +16,7 @@ public class RepoManagerBase {
 
 	public void addRepo(String url) {
 		repos.add(new Repository(lastId + 1, url));
-		ModgetLib.logInfo(String.format("Repository added: ID: %s; URI: %s", lastId + 1, url));
+		ModgetLib.logInfo(String.format("Repository added: ID=%s; URI=%s", lastId + 1, url));
 		lastId++;
 	}
 
