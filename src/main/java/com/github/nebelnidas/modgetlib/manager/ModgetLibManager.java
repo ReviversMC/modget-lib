@@ -1,5 +1,6 @@
 package com.github.nebelnidas.modgetlib.manager;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.github.nebelnidas.modgetlib.ModgetLib;
@@ -24,17 +25,17 @@ public class ModgetLibManager {
 	private int ignoredModsCount = 0;
 
 
-	public void init(String minecraftVersion, ArrayList<String> repoUris, ArrayList<RecognizedMod> installedMods) {
+	public void init(String minecraftVersion, ArrayList<String> repoUris, ArrayList<RecognizedMod> installedMods) throws UnknownHostException, Exception {
 		this.minecraftVersion = minecraftVersion;
 		REPO_MANAGER.init(repoUris);
 		reload(installedMods);
 	}
 
-	public void reload(ArrayList<RecognizedMod> installedMods) {
+	public void reload(ArrayList<RecognizedMod> installedMods) throws UnknownHostException, Exception {
 		this.installedMods = installedMods;
 
 		for (Repository repo : REPO_MANAGER.getRepos()) {
-			repo.refreshLookupTableNoException();
+			repo.refreshLookupTable();
 		}
 		scanMods();
 		recognizedMods = MANIFEST_MANAGER.downloadManifests(recognizedMods);

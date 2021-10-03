@@ -12,6 +12,7 @@ public class Repository {
 	private final String uri;
 	private LookupTable lookupTable;
 	private boolean enabled = true;
+	private boolean outdated = false;
 
 	public Repository(int id, String uri) {
 		this.id = id;
@@ -19,16 +20,15 @@ public class Repository {
 			uri = uri.substring(0, uri.length() - 1);
 		}
 		this.uri = uri;
-		refreshLookupTableNoException();
-	}
-
-	public void refreshLookupTable() throws UnknownHostException, Exception {
-		lookupTable = downloadLookupTable();
-	}
-	public void refreshLookupTableNoException() {
 		try {
 			refreshLookupTable();
 		} catch (Exception e) {}
+	}
+
+
+	public void refreshLookupTable() throws UnknownHostException, Exception {
+		lookupTable = downloadLookupTable();
+		outdated = checkForNewVersion();
 	}
 
 	private LookupTable downloadLookupTable() throws Exception {
@@ -50,6 +50,24 @@ public class Repository {
 			}
 			throw e;
         }
+	}
+
+	private boolean checkForNewVersion() {
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+
+		try {
+			int currentManifestSpec = Integer.parseInt(uri.substring(uri.length() - 1)) + 1;
+			String newVersionUri = uri.substring(0, uri.length() - 1) + currentManifestSpec;
+
+			LookupTableEntry[] entries = mapper.readValue(new URL(newVersionUri + "/lookup-table.yaml"), LookupTableEntry[].class);
+
+			return true;
+        } catch (Exception e) {
+			if (e instanceof UnknownHostException) {
+				ModgetLib.logWarn("Couldn't check for new repository versions. Please check your Internet connection!");
+			}
+        }
+		return false;
 	}
 
 
@@ -75,5 +93,9 @@ public class Repository {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public boolean isOutdated() {
+		return this.outdated;
 	}
 }
