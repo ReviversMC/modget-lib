@@ -22,7 +22,7 @@ public class Repository {
 			uri = uri.substring(0, uri.length() - 1);
 		}
 		this.uri = uri;
-		this.uriWithSpec = uri + (ModgetConfig.SUPPORTED_MANIFEST_SPEC + 1);
+		this.uriWithSpec = uri + "/v" + ModgetConfig.SUPPORTED_MANIFEST_SPEC;
 		try {
 			refresh();
 		} catch (Exception e) {}
@@ -59,8 +59,9 @@ public class Repository {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
 		try {
-			mapper.readValue(new URL(uriWithSpec + "/lookup-table.yaml"), LookupTableEntry[].class);
+			mapper.readValue(new URL(String.format("%s/v%s/%s", uri, ModgetConfig.SUPPORTED_MANIFEST_SPEC + 1, "lookup-table.yaml")), LookupTableEntry[].class);
 
+			ModgetLib.logInfo("A new repo version has been detected! Please update modget to use it.");
 			return true;
         } catch (Exception e) {
 			if (e instanceof UnknownHostException) {
