@@ -11,6 +11,7 @@ import com.github.nebelnidas.modgetlib.config.ModgetConfig;
 public class Repository {
 	private final int id;
 	private final String uri;
+	private String uriWithSpec;
 	private LookupTable lookupTable;
 	private boolean enabled = true;
 	private boolean outdated = false;
@@ -21,6 +22,7 @@ public class Repository {
 			uri = uri.substring(0, uri.length() - 1);
 		}
 		this.uri = uri;
+		this.uriWithSpec = uri + (ModgetConfig.SUPPORTED_MANIFEST_SPEC + 1);
 		try {
 			refresh();
 		} catch (Exception e) {}
@@ -36,7 +38,7 @@ public class Repository {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
 		try {
-			LookupTableEntry[] entries = mapper.readValue(new URL(String.format("%s/v%s/%s", uri, ModgetConfig.SUPPORTED_MANIFEST_SPEC, "/lookup-table.yaml")), LookupTableEntry[].class);
+			LookupTableEntry[] entries = mapper.readValue(new URL(String.format("%s/%s", uriWithSpec, "/lookup-table.yaml")), LookupTableEntry[].class);
 
 			LookupTable newLookupTable = new LookupTable(this, entries);
 			for (LookupTableEntry entry : entries) {
@@ -57,7 +59,7 @@ public class Repository {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
 		try {
-			mapper.readValue(new URL(uri + (ModgetConfig.SUPPORTED_MANIFEST_SPEC + 1) + "/lookup-table.yaml"), LookupTableEntry[].class);
+			mapper.readValue(new URL(uriWithSpec + "/lookup-table.yaml"), LookupTableEntry[].class);
 
 			return true;
         } catch (Exception e) {
@@ -75,6 +77,10 @@ public class Repository {
 
 	public String getUri() {
 		return this.uri;
+	}
+
+	public String getUriWithSpec() {
+		return this.uriWithSpec;
 	}
 
 	public LookupTable getLookupTable() {

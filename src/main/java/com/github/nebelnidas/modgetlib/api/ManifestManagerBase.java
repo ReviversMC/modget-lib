@@ -13,7 +13,7 @@ public abstract class ManifestManagerBase {
 
 	public String assembleManifestUri(Repository repo, String publisher, String modId) {
 		try {
-			return new String(String.format("%s/manifests/%s/%s/%s/%s.%s.yaml", repo.getUri(), (""+publisher.charAt(0)).toUpperCase(), publisher, modId, publisher, modId));
+			return new String(String.format("%s/manifests/%s/%s/%s/%s.%s.yaml", repo.getUriWithSpec(), (""+publisher.charAt(0)).toUpperCase(), publisher, modId, publisher, modId));
 		} catch (Exception e) {
 			ModgetLib.logWarn(String.format("An error occurred while assembling the Repo%s.%s.%s manifest uri", repo.getId(), publisher, modId), e.getMessage());
 			return null;
