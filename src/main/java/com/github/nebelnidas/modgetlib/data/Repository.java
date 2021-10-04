@@ -59,7 +59,7 @@ public class Repository {
 			int currentManifestSpec = Integer.parseInt(uri.substring(uri.length() - 1)) + 1;
 			String newVersionUri = uri.substring(0, uri.length() - 1) + currentManifestSpec;
 
-			LookupTableEntry[] entries = mapper.readValue(new URL(newVersionUri + "/lookup-table.yaml"), LookupTableEntry[].class);
+			mapper.readValue(new URL(newVersionUri + "/lookup-table.yaml"), LookupTableEntry[].class);
 
 			return true;
         } catch (Exception e) {
