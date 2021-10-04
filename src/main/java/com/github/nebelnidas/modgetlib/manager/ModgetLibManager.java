@@ -35,7 +35,7 @@ public class ModgetLibManager {
 		this.installedMods = installedMods;
 
 		for (Repository repo : REPO_MANAGER.getRepos()) {
-			repo.refreshLookupTable();
+			repo.refresh();
 		}
 		scanMods();
 		recognizedMods = MANIFEST_MANAGER.downloadManifests(recognizedMods);

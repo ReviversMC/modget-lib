@@ -21,12 +21,12 @@ public class Repository {
 		}
 		this.uri = uri;
 		try {
-			refreshLookupTable();
+			refresh();
 		} catch (Exception e) {}
 	}
 
 
-	public void refreshLookupTable() throws UnknownHostException, Exception {
+	public void refresh() throws UnknownHostException, Exception {
 		lookupTable = downloadLookupTable();
 		outdated = checkForNewVersion();
 	}
