@@ -6,9 +6,9 @@ import com.github.nebelnidas.modgetlib.api.RepoManagerBase;
 
 public class RepoManager extends RepoManagerBase {
 
-	public void init(ArrayList<String> repoUris, int supportedManifestSpec) {
+	public void init(ArrayList<String> repoUris) {
 		for (String uri : repoUris) {
-			addRepo(String.format("%s/v%s", uri, supportedManifestSpec));
+			addRepo(uri);
 		}
 	}
 

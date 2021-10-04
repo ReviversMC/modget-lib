@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.github.nebelnidas.modgetlib.ModgetLib;
+import com.github.nebelnidas.modgetlib.config.ModgetConfig;
 
 public class Repository {
 	private final int id;
@@ -35,7 +36,7 @@ public class Repository {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
 		try {
-			LookupTableEntry[] entries = mapper.readValue(new URL(uri + "/lookup-table.yaml"), LookupTableEntry[].class);
+			LookupTableEntry[] entries = mapper.readValue(new URL(String.format("%s/v%s/%s", uri, ModgetConfig.SUPPORTED_MANIFEST_SPEC, "/lookup-table.yaml")), LookupTableEntry[].class);
 
 			LookupTable newLookupTable = new LookupTable(this, entries);
 			for (LookupTableEntry entry : entries) {
@@ -56,10 +57,7 @@ public class Repository {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
 		try {
-			int currentManifestSpec = Integer.parseInt(uri.substring(uri.length() - 1)) + 1;
-			String newVersionUri = uri.substring(0, uri.length() - 1) + currentManifestSpec;
-
-			mapper.readValue(new URL(newVersionUri + "/lookup-table.yaml"), LookupTableEntry[].class);
+			mapper.readValue(new URL(uri + (ModgetConfig.SUPPORTED_MANIFEST_SPEC + 1) + "/lookup-table.yaml"), LookupTableEntry[].class);
 
 			return true;
         } catch (Exception e) {

@@ -25,9 +25,9 @@ public class ModgetLibManager {
 	private int ignoredModsCount = 0;
 
 
-	public void init(String minecraftVersion, ArrayList<String> repoUris, int supportedManifestSpec, ArrayList<RecognizedMod> installedMods) throws UnknownHostException, Exception {
+	public void init(String minecraftVersion, ArrayList<String> repoUris, ArrayList<RecognizedMod> installedMods) throws UnknownHostException, Exception {
 		this.minecraftVersion = minecraftVersion;
-		REPO_MANAGER.init(repoUris, supportedManifestSpec);
+		REPO_MANAGER.init(repoUris);
 		reload(installedMods);
 	}
 

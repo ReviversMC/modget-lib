@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ModgetConfig {
+    public final static int SUPPORTED_MANIFEST_SPEC = 3;
+
 	public static final ArrayList<String> IGNORED_MODS = new ArrayList<String>(
 		Arrays.asList(
 			"minecraft",
