@@ -203,6 +203,7 @@ public class ModgetLibManager {
 		ArrayList<RecognizedMod> modsFound = new ArrayList<RecognizedMod>();
 		ArrayList<RecognizedMod> modsFoundPriority0 = new ArrayList<RecognizedMod>();
 		ArrayList<RecognizedMod> modsFoundPriority1 = new ArrayList<RecognizedMod>();
+		ArrayList<RecognizedMod> modsFoundPriority2 = new ArrayList<RecognizedMod>();
 
 		for (Repository repo : REPO_MANAGER.getRepos()) {
 			LookupTable lookupTable = repo.getLookupTable();
@@ -240,24 +241,26 @@ public class ModgetLibManager {
 					for (String name : entry.getNames()) {
 						if (name.toLowerCase().contains(term.toLowerCase())) {
 							recognized = true;
-							priority = 1;
+							priority = 2;
 						}
 					}
 				}
 
 				if (recognized == true) {
+					RecognizedMod mod = new RecognizedMod() {{
+						setId(entry.getId());
+						addLookupTableEntry(entry);
+					}};
+
 					switch (priority) {
 						case 0:
-							modsFoundPriority0.add(new RecognizedMod() {{
-								setId(entry.getId());
-								addLookupTableEntry(entry);
-							}});
+							modsFoundPriority0.add(mod);
 							break;
 						case 1:
-							modsFoundPriority1.add(new RecognizedMod() {{
-								setId(entry.getId());
-								addLookupTableEntry(entry);
-							}});
+							modsFoundPriority1.add(mod);
+							break;
+						case 2:
+							modsFoundPriority2.add(mod);
 							break;
 					}
 				}
@@ -265,6 +268,7 @@ public class ModgetLibManager {
 		}
 		modsFound.addAll(modsFoundPriority0);
 		modsFound.addAll(modsFoundPriority1);
+		modsFound.addAll(modsFoundPriority2);
 
 		modsFound = MANIFEST_MANAGER.downloadManifests(modsFound);
 		modsFound = this.findLatestVersions(modsFound);
