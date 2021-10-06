@@ -3,6 +3,7 @@ package com.github.nebelnidas.modgetlib.data;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.github.nebelnidas.modgetlib.ModgetLib;
@@ -36,6 +37,7 @@ public class Repository {
 
 	private LookupTable downloadLookupTable() throws Exception {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 		try {
 			LookupTableEntry[] entries = mapper.readValue(new URL(String.format("%s/%s", uriWithSpec, "/lookup-table.yaml")), LookupTableEntry[].class);
@@ -47,9 +49,9 @@ public class Repository {
 			return newLookupTable;
         } catch (Exception e) {
 			if (e instanceof UnknownHostException) {
-				ModgetLib.logWarn("Couldn't connect to the manifest repository. Please check your Internet connection!");
+				ModgetLib.logWarn("Couldn't connect to the manifest repository. Please check your Internet connection! %s", e.getMessage());
 			} else {
-				ModgetLib.logWarn("Couldn't connect to the manifest repository", e.getMessage());
+				ModgetLib.logWarn("Couldn't connect to the manifest repository. %s", e.getMessage());
 			}
 			throw e;
         }
@@ -57,6 +59,7 @@ public class Repository {
 
 	private boolean checkForNewVersion() {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 		try {
 			mapper.readValue(new URL(String.format("%s/v%s/%s", uri, ModgetConfig.SUPPORTED_MANIFEST_SPEC + 1, "lookup-table.yaml")), LookupTableEntry[].class);
@@ -65,7 +68,7 @@ public class Repository {
 			return true;
         } catch (Exception e) {
 			if (e instanceof UnknownHostException) {
-				ModgetLib.logWarn("Couldn't check for new repository versions. Please check your Internet connection!");
+				ModgetLib.logWarn("Couldn't check for new repository versions. Please check your Internet connection! %s", e.getMessage());
 			}
         }
 		return false;
