@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.github.nebelnidas.modgetlib.ModgetLib;
 import com.github.nebelnidas.modgetlib.config.ModgetConfig;
+import com.github.nebelnidas.modgetlib.data.LookupTable;
 import com.github.nebelnidas.modgetlib.data.LookupTableEntry;
 import com.github.nebelnidas.modgetlib.data.ManifestModVersion;
 import com.github.nebelnidas.modgetlib.data.Package;
@@ -37,14 +38,14 @@ public class ModgetLibManager {
 		for (Repository repo : REPO_MANAGER.getRepos()) {
 			repo.refresh();
 		}
-		scanMods();
+		recognizedMods = scanMods(installedMods);
 		recognizedMods = MANIFEST_MANAGER.downloadManifests(recognizedMods);
-		findUpdates();
+		recognizedMods = findLatestVersions(recognizedMods);
+		recognizedMods = findUpdates(recognizedMods);
 	}
 
-	public void scanMods() {
+	public ArrayList<RecognizedMod> scanMods(ArrayList<RecognizedMod> mods) {
 		ArrayList<Repository> repos = REPO_MANAGER.getRepos();
-		recognizedMods.clear();
 
 		for (RecognizedMod mod : installedMods) {
 			// If mod is contained in built-in ignored list, skip it
@@ -62,7 +63,7 @@ public class ModgetLibManager {
 					// ...to check if the mod IDs match.
 					if (lookupTableEntry.getId().equalsIgnoreCase(mod.getId())) {
 						// If they match, check if it has already been found before (in a different repo)
-						for (RecognizedMod recognizedMod : recognizedMods) {
+						for (RecognizedMod recognizedMod : mods) {
 							if (recognizedMod.getId().equals(mod.getId())) {
 								// If so, just add the data to the existing recognized mod
 								recognizedMod.addLookupTableEntry(lookupTableEntry);
@@ -71,7 +72,7 @@ public class ModgetLibManager {
 							}
 						}
 						// Otherwise, create a new one
-						recognizedMods.add(new RecognizedMod() {{
+						mods.add(new RecognizedMod() {{
 							setId(mod.getId());
 							setCurrentVersion(mod.getCurrentVersion());
 							addLookupTableEntry(lookupTableEntry);
@@ -85,7 +86,7 @@ public class ModgetLibManager {
 		// Log which mods have been recognized
 		int modCount = 0;
 		StringBuilder message = new StringBuilder();
-		for (RecognizedMod mod : recognizedMods) {
+		for (RecognizedMod mod : mods) {
 			modCount++;
 			if (modCount > 1) {
 				message.append("; ");
@@ -97,6 +98,8 @@ public class ModgetLibManager {
 		}
 		if (message.length() != 0) {message.insert(0, ": ");}
 		ModgetLib.logInfo(String.format("Recognized %s out of %s mods%s", modCount, installedMods.size() - ignoredModsCount, message.toString()));
+
+		return mods;
 	}
 
 
@@ -109,12 +112,12 @@ public class ModgetLibManager {
 		return null;
 	}
 
-	public void findUpdates() {
+	public ArrayList<RecognizedMod> findLatestVersions(ArrayList<RecognizedMod> mods) {
 		RecognizedMod mod;
 		ManifestModVersion latestManifestModVersion;
 
-		for (int i = 0; i < recognizedMods.size(); i++) {
-			mod = recognizedMods.get(i);
+		for (int i = 0; i < mods.size(); i++) {
+			mod = mods.get(i);
 			mod.setUpdateAvailable(false);
 
 			if (mod.getAvailablePackages().size() > 1) {
@@ -126,6 +129,26 @@ public class ModgetLibManager {
 				latestManifestModVersion = findModVersionMatchingCurrentMinecraftVersion(p);
 				if (latestManifestModVersion == null) {continue;}
 				p.setLatestCompatibleModVersion(latestManifestModVersion);
+			}
+		}
+
+		return mods;
+	}
+
+	public ArrayList<RecognizedMod> findUpdates(ArrayList<RecognizedMod> mods) {
+		RecognizedMod mod;
+		ManifestModVersion latestManifestModVersion;
+
+		for (int i = 0; i < mods.size(); i++) {
+			mod = mods.get(i);
+			mod.setUpdateAvailable(false);
+
+			if (mod.getAvailablePackages().size() > 1) {
+				ModgetLib.logInfo(String.format("There are multiple packages available for %s", WordUtils.capitalize(mod.getId())));
+			}
+			for (int j = 0; j < mod.getAvailablePackages().size(); j++) {
+				Package p = mod.getAvailablePackages().get(j);
+				latestManifestModVersion = p.getLatestCompatibleModVersion();
 
 				// Try parsing the semantic manifest and mod versions
 				SemanticVersion currentVersion;
@@ -158,6 +181,8 @@ public class ModgetLibManager {
 				}
 			}
 		}
+
+		return mods;
 	}
 
 	public ArrayList<RecognizedMod> getRecognizedMods() {
@@ -172,5 +197,77 @@ public class ModgetLibManager {
 			}
 		}
 		return modsWithUpdates;
+	}
+
+	public ArrayList<RecognizedMod> searchForMods(String term, int charsNeededForExtensiveSearch) {
+		ArrayList<RecognizedMod> modsFound = new ArrayList<RecognizedMod>();
+		ArrayList<RecognizedMod> modsFoundPriority0 = new ArrayList<RecognizedMod>();
+		ArrayList<RecognizedMod> modsFoundPriority1 = new ArrayList<RecognizedMod>();
+
+		for (Repository repo : REPO_MANAGER.getRepos()) {
+			LookupTable lookupTable = repo.getLookupTable();
+
+			for (LookupTableEntry entry : lookupTable.getLookupTableEntries()) {
+				boolean recognized = false;
+				int priority = 0;
+
+				if (entry.getId().equalsIgnoreCase(term)) {
+					recognized = true;
+				}
+				if (recognized == false) {
+					for (String pack : entry.getPackages()) {
+						if (pack.equalsIgnoreCase(term)) {
+							recognized = true;
+						}
+					}
+				}
+				if (recognized == false) {
+					for (String name : entry.getNames()) {
+						if (name.equalsIgnoreCase(term)) {
+							recognized = true;
+						}
+					}
+				}
+				if (recognized == false && term.length() >= charsNeededForExtensiveSearch) {
+					for (String pack : entry.getPackages()) {
+						if (pack.toLowerCase().contains(term.toLowerCase())) {
+							recognized = true;
+							priority = 1;
+						}
+					}
+				}
+				if (recognized == false && term.length() >= charsNeededForExtensiveSearch) {
+					for (String name : entry.getNames()) {
+						if (name.toLowerCase().contains(term.toLowerCase())) {
+							recognized = true;
+							priority = 1;
+						}
+					}
+				}
+
+				if (recognized == true) {
+					switch (priority) {
+						case 0:
+							modsFoundPriority0.add(new RecognizedMod() {{
+								setId(entry.getId());
+								addLookupTableEntry(entry);
+							}});
+							break;
+						case 1:
+							modsFoundPriority1.add(new RecognizedMod() {{
+								setId(entry.getId());
+								addLookupTableEntry(entry);
+							}});
+							break;
+					}
+				}
+			}
+		}
+		modsFound.addAll(modsFoundPriority0);
+		modsFound.addAll(modsFoundPriority1);
+
+		modsFound = MANIFEST_MANAGER.downloadManifests(modsFound);
+		modsFound = this.findLatestVersions(modsFound);
+		return modsFound;
 	}
 }
