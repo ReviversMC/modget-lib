@@ -1,38 +1,42 @@
-package com.github.nebelnidas.modgetlib.manager;
+package com.github.nebelnidas.modgetlib.api.v0.impl;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.github.nebelnidas.modgetlib.ModgetLib;
+import com.github.nebelnidas.modgetlib.api.v0.def.ManifestManager;
+import com.github.nebelnidas.modgetlib.api.v0.def.RepoManager;
+import com.github.nebelnidas.modgetlib.api.v0.def.data.Package;
+import com.github.nebelnidas.modgetlib.api.v0.def.data.RecognizedMod;
+import com.github.nebelnidas.modgetlib.api.v0.def.data.Repository;
+import com.github.nebelnidas.modgetlib.api.v0.def.data.lookuptable.LookupTable;
+import com.github.nebelnidas.modgetlib.api.v0.def.data.lookuptable.LookupTableEntry;
+import com.github.nebelnidas.modgetlib.api.v0.def.data.manifest.ModVersion;
+import com.github.nebelnidas.modgetlib.api.v0.impl.data.RecognizedModImpl;
 import com.github.nebelnidas.modgetlib.config.ModgetConfig;
-import com.github.nebelnidas.modgetlib.data.LookupTable;
-import com.github.nebelnidas.modgetlib.data.LookupTableEntry;
-import com.github.nebelnidas.modgetlib.data.ManifestModVersion;
-import com.github.nebelnidas.modgetlib.data.Package;
-import com.github.nebelnidas.modgetlib.data.RecognizedMod;
-import com.github.nebelnidas.modgetlib.data.Repository;
 import com.github.nebelnidas.modgetlib.fabricmc.loader.api.SemanticVersion;
 import com.github.nebelnidas.modgetlib.fabricmc.loader.api.VersionParsingException;
 
 import org.apache.commons.text.WordUtils;
 
-public class ModgetLibManager {
-	public final RepoManager REPO_MANAGER = new RepoManager();
-	public final ManifestManager MANIFEST_MANAGER = new ManifestManager();
+public class ModgetLibManagerImpl {
+	public final RepoManager REPO_MANAGER = new RepoManagerImpl();
+	public final ManifestManager MANIFEST_MANAGER = new ManifestManagerImpl();
 
-	private ArrayList<RecognizedMod> installedMods = new ArrayList<RecognizedMod>();
-	private ArrayList<RecognizedMod> recognizedMods = new ArrayList<RecognizedMod>();
+	private List<RecognizedMod> installedMods = new ArrayList<RecognizedMod>();
+	private List<RecognizedMod> recognizedMods = new ArrayList<RecognizedMod>();
 	private String minecraftVersion;
 	private int ignoredModsCount = 0;
 
 
-	public void init(String minecraftVersion, ArrayList<String> repoUris, ArrayList<RecognizedMod> installedMods) throws UnknownHostException, Exception {
+	public void init(String minecraftVersion, List<String> repoUris, List<RecognizedMod> installedMods) throws UnknownHostException, Exception {
 		this.minecraftVersion = minecraftVersion;
 		REPO_MANAGER.init(repoUris);
 		reload(installedMods);
 	}
 
-	public void reload(ArrayList<RecognizedMod> installedMods) throws UnknownHostException, Exception {
+	public void reload(List<RecognizedMod> installedMods) throws UnknownHostException, Exception {
 		this.installedMods = installedMods;
 
 		for (Repository repo : REPO_MANAGER.getRepos()) {
@@ -44,8 +48,8 @@ public class ModgetLibManager {
 		recognizedMods = findUpdates(recognizedMods);
 	}
 
-	public ArrayList<RecognizedMod> scanMods(ArrayList<RecognizedMod> mods) {
-		ArrayList<Repository> repos = REPO_MANAGER.getRepos();
+	public List<RecognizedMod> scanMods(List<RecognizedMod> mods) {
+		List<Repository> repos = REPO_MANAGER.getRepos();
 
 		for (RecognizedMod mod : installedMods) {
 			// If mod is contained in built-in ignored list, skip it
@@ -72,7 +76,7 @@ public class ModgetLibManager {
 							}
 						}
 						// Otherwise, create a new one
-						mods.add(new RecognizedMod() {{
+						mods.add(new RecognizedModImpl() {{
 							setId(mod.getId());
 							setCurrentVersion(mod.getCurrentVersion());
 							addLookupTableEntry(lookupTableEntry);
@@ -103,8 +107,8 @@ public class ModgetLibManager {
 	}
 
 
-	public ManifestModVersion findModVersionMatchingCurrentMinecraftVersion(Package p) {
-		for (ManifestModVersion version : p.getManifestModVersions()) {
+	public ModVersion findModVersionMatchingCurrentMinecraftVersion(Package p) {
+		for (ModVersion version : p.getManifestModVersions()) {
 			if (version.getMinecraftVersions().contains(minecraftVersion)) {
 				return(version);
 			}
@@ -112,9 +116,9 @@ public class ModgetLibManager {
 		return null;
 	}
 
-	public ArrayList<RecognizedMod> findLatestVersions(ArrayList<RecognizedMod> mods) {
+	public List<RecognizedMod> findLatestVersions(List<RecognizedMod> mods) {
 		RecognizedMod mod;
-		ManifestModVersion latestManifestModVersion;
+		ModVersion latestManifestModVersion;
 
 		for (int i = 0; i < mods.size(); i++) {
 			mod = mods.get(i);
@@ -135,9 +139,9 @@ public class ModgetLibManager {
 		return mods;
 	}
 
-	public ArrayList<RecognizedMod> findUpdates(ArrayList<RecognizedMod> mods) {
+	public List<RecognizedMod> findUpdates(List<RecognizedMod> mods) {
 		RecognizedMod mod;
-		ManifestModVersion latestManifestModVersion;
+		ModVersion latestManifestModVersion;
 
 		for (int i = 0; i < mods.size(); i++) {
 			mod = mods.get(i);
@@ -185,12 +189,12 @@ public class ModgetLibManager {
 		return mods;
 	}
 
-	public ArrayList<RecognizedMod> getRecognizedMods() {
+	public List<RecognizedMod> getRecognizedMods() {
 		return this.recognizedMods;
 	}
 
-	public ArrayList<RecognizedMod> getModsWithUpdates() {
-		ArrayList<RecognizedMod> modsWithUpdates = new ArrayList<RecognizedMod>();
+	public List<RecognizedMod> getModsWithUpdates() {
+		List<RecognizedMod> modsWithUpdates = new ArrayList<RecognizedMod>();
 		for (RecognizedMod mod : recognizedMods) {
 			if (mod.isUpdateAvailable() == true) {
 				modsWithUpdates.add(mod);
@@ -199,11 +203,11 @@ public class ModgetLibManager {
 		return modsWithUpdates;
 	}
 
-	public ArrayList<RecognizedMod> searchForMods(String term, int charsNeededForExtensiveSearch) {
-		ArrayList<RecognizedMod> modsFound = new ArrayList<RecognizedMod>();
-		ArrayList<RecognizedMod> modsFoundPriority0 = new ArrayList<RecognizedMod>();
-		ArrayList<RecognizedMod> modsFoundPriority1 = new ArrayList<RecognizedMod>();
-		ArrayList<RecognizedMod> modsFoundPriority2 = new ArrayList<RecognizedMod>();
+	public List<RecognizedMod> searchForMods(String term, int charsNeededForExtensiveSearch) {
+		List<RecognizedMod> modsFound = new ArrayList<RecognizedMod>();
+		List<RecognizedMod> modsFoundPriority0 = new ArrayList<RecognizedMod>();
+		List<RecognizedMod> modsFoundPriority1 = new ArrayList<RecognizedMod>();
+		List<RecognizedMod> modsFoundPriority2 = new ArrayList<RecognizedMod>();
 
 		for (Repository repo : REPO_MANAGER.getRepos()) {
 			LookupTable lookupTable = repo.getLookupTable();
@@ -247,7 +251,7 @@ public class ModgetLibManager {
 				}
 
 				if (recognized == true) {
-					RecognizedMod mod = new RecognizedMod() {{
+					RecognizedMod mod = new RecognizedModImpl() {{
 						setId(entry.getId());
 						addLookupTableEntry(entry);
 					}};

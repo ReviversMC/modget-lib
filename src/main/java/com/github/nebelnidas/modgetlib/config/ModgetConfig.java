@@ -2,11 +2,12 @@ package com.github.nebelnidas.modgetlib.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ModgetConfig {
-    public final static int SUPPORTED_MANIFEST_SPEC = 3;
+    public final static int MAX_SUPPORTED_MANIFEST_SPEC = 3;
 
-	public static final ArrayList<String> IGNORED_MODS = new ArrayList<String>(
+	public static final List<String> IGNORED_MODS = new ArrayList<String>(
 		Arrays.asList(
 			"minecraft",
             "toml4j",
