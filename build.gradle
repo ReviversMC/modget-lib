@@ -2,7 +2,7 @@ plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -23,6 +23,9 @@ repositories {
     maven {
         url = "https://mvnrepository.com/"
     }
+    maven {
+        url = "https://jitpack.io"
+    }
 }
 
 dependencies {
@@ -33,14 +36,10 @@ dependencies {
     shadow "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
     shadow "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
 
-    // jackson for reading YAML
-	shadow "com.fasterxml.jackson.core:jackson-core:${project.jackson_version}"
-	shadow "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.jackson_dataformat_yaml_version}"
-	shadow "com.fasterxml.jackson.core:jackson-databind:${project.jackson_version}"
-    shadow "com.fasterxml.jackson.core:jackson-annotations:${project.jackson_version}"
-
     // commons-text for capitalizing text
     shadow "org.apache.commons:commons-text:${project.commons_text_version}"
+
+    shadow "com.github.ReviversMC:modget-manifest-api:${modget_manifest_api_version}"
 
     // spotbugs
     compileOnly "com.github.spotbugs:spotbugs:${project.spotbugs_version}"
