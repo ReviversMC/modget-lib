@@ -6,7 +6,7 @@ import java.util.List;
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.RecognizedMod;
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Repository;
 
-public interface ModgetApiUtils {
+public interface ModgetLibUtils {
 
 	public List<RecognizedMod> scanMods(List<RecognizedMod> mods, List<String> ignoredModIds, List<Repository> repos) throws IOException;
 

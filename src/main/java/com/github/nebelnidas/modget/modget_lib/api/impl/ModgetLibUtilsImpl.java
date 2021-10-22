@@ -13,16 +13,16 @@ import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.manifest.Manife
 import com.github.nebelnidas.modget.manifest_api.api.v0.impl.ManifestUtilsImpl;
 import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.PackageImpl;
 import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.RecognizedModImpl;
-import com.github.nebelnidas.modget.modget_lib.ModgetApi;
-import com.github.nebelnidas.modget.modget_lib.api.def.ModgetApiUtils;
+import com.github.nebelnidas.modget.modget_lib.ModgetLib;
+import com.github.nebelnidas.modget.modget_lib.api.def.ModgetLibUtils;
 import com.github.nebelnidas.modget.modget_lib.api.exception.NoCompatibleVersionException;
 
 import org.apache.commons.text.WordUtils;
 
-public class ModgetApiUtilsImpl implements ModgetApiUtils {
+public class ModgetLibUtilsImpl implements ModgetLibUtils {
 
-	public static ModgetApiUtilsImpl create() {
-		return new ModgetApiUtilsImpl();
+	public static ModgetLibUtilsImpl create() {
+		return new ModgetLibUtilsImpl();
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class ModgetApiUtilsImpl implements ModgetApiUtils {
 		}
 		// Log which mods have been recognized
 		if (logMessage.length() != 0) {logMessage.insert(0, ": ");}
-		ModgetApi.logInfo(String.format("Recognized %s out of %s mods%s", recognizedMods.size(), mods.size() - ignoredModsCount, logMessage.toString()));
+		ModgetLib.logInfo(String.format("Recognized %s out of %s mods%s", recognizedMods.size(), mods.size() - ignoredModsCount, logMessage.toString()));
 
 		return recognizedMods;
 	}
@@ -191,7 +191,7 @@ public class ModgetApiUtilsImpl implements ModgetApiUtils {
 							try {
 								addUpdate(ModVersionUtilsImpl.create().getLatestCompatibleVersion(manifest.getDownloads(), gameVersion));
 							} catch (NoCompatibleVersionException e) {
-								ModgetApi.logInfo(String.format("Package Repo%s.%s.%s has been found, but it's incompatible with the installed Minecraft version",
+								ModgetLib.logInfo(String.format("Package Repo%s.%s.%s has been found, but it's incompatible with the installed Minecraft version",
 									repo.getId(), pack.getPublisher(), pack.getId()));
 							}
 						}

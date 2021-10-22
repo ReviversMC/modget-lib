@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Repository;
 import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.RepositoryImpl;
-import com.github.nebelnidas.modget.modget_lib.ModgetApi;
+import com.github.nebelnidas.modget.modget_lib.ModgetLib;
 import com.github.nebelnidas.modget.modget_lib.api.def.RepoManager;
 
 public class RepoManagerImpl implements RepoManager {
@@ -34,7 +34,7 @@ public class RepoManagerImpl implements RepoManager {
 			try {
 				repo.refresh();
 			} catch (Exception e) {
-				ModgetApi.logWarn(String.format("An error occurred while trying to refresh repository %s", repo.getId()));
+				ModgetLib.logWarn(String.format("An error occurred while trying to refresh repository %s", repo.getId()));
 				throw e;
 			}
 			newRepos.add(repo);
@@ -50,7 +50,7 @@ public class RepoManagerImpl implements RepoManager {
 	@Override
 	public void addRepo(String url) {
 		repos.add(new RepositoryImpl(lastId + 1, url));
-		ModgetApi.logInfo(String.format("Repository added: ID='%s'; URI='%s'", lastId + 1, url));
+		ModgetLib.logInfo(String.format("Repository added: ID='%s'; URI='%s'", lastId + 1, url));
 		lastId++;
 	}
 

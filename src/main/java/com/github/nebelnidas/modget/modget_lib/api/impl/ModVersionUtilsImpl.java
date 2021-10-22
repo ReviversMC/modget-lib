@@ -7,7 +7,7 @@ import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Package;
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.RecognizedMod;
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.manifest.Manifest;
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.manifest.ModVersion;
-import com.github.nebelnidas.modget.modget_lib.ModgetApi;
+import com.github.nebelnidas.modget.modget_lib.ModgetLib;
 import com.github.nebelnidas.modget.modget_lib.api.def.ModVersionUtils;
 import com.github.nebelnidas.modget.modget_lib.api.exception.NoCompatibleVersionException;
 import com.github.nebelnidas.modget.modget_lib.fabricmc.loader.api.SemanticVersion;
@@ -37,7 +37,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 	@Override
 	public ModVersion getLatestVersion(List<ModVersion> versions) {
 		if (versions == null) {
-			ModgetApi.logWarn("Cannot look for the latest mod version, because no available versions have been defined!");
+			ModgetLib.logWarn("Cannot look for the latest mod version, because no available versions have been defined!");
 			return null;
 		}
 		ModVersion latestVersion = versions.get(0);
@@ -48,7 +48,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 					latestVersion = version;
 				}
 			} catch (VersionParsingException e) {
-				ModgetApi.logWarn(String.format("Cannot compare %s, because it doesn't comply with semantic versioning!", version.getVersion()));
+				ModgetLib.logWarn(String.format("Cannot compare %s, because it doesn't comply with semantic versioning!", version.getVersion()));
 			}
 		}
 		return latestVersion;
@@ -83,7 +83,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 			mod.resetUpdates();
 
 			if (mod.getAvailablePackages().size() > 1 || mod.getAvailablePackages().get(0).getManifests().size() > 1) {
-				ModgetApi.logInfo(String.format("There are multiple packages available for %s", WordUtils.capitalize(mod.getId())));
+				ModgetLib.logInfo(String.format("There are multiple packages available for %s", WordUtils.capitalize(mod.getId())));
 			}
 			for (int j = 0; j < mod.getAvailablePackages().size(); j++) {
 				Package pack = mod.getAvailablePackages().get(j);
@@ -101,7 +101,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 					try {
 						currentVersionSemantic = SemanticVersion.parse(mod.getCurrentVersion());
 					} catch (VersionParsingException e) {
-						ModgetApi.logWarn(String.format("%s doesn't respect semantic versioning, an update check is therefore not possible! %s", manifest.getName(), e.getMessage()));
+						ModgetLib.logWarn(String.format("%s doesn't respect semantic versioning, an update check is therefore not possible! %s", manifest.getName(), e.getMessage()));
 						break;
 					}
 
@@ -109,7 +109,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 					try {
 						latestVersionSemantic = SemanticVersion.parse(latestModVersion.getVersion());
 					} catch (VersionParsingException e) {
-						ModgetApi.logWarn(String.format("The %s manifest doesn't respect semantic versioning, an update check is therefore not possible!", manifest.getName()), e.getMessage());
+						ModgetLib.logWarn(String.format("The %s manifest doesn't respect semantic versioning, an update check is therefore not possible!", manifest.getName()), e.getMessage());
 						continue;
 					}
 
@@ -119,12 +119,12 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 						pack.getPublisher(), manifest.getParentLookupTableEntry().getId());
 
 					if (VersionUtilsImpl.create().isVersionGreaterThan(latestVersionSemantic, currentVersionSemantic)) {
-						ModgetApi.logInfo(String.format("Found an update for %s: %s %s", manifest.getName(),
+						ModgetLib.logInfo(String.format("Found an update for %s: %s %s", manifest.getName(),
 							packageId, latestVersionSemantic.toString()));
 
 						modVersionUpdates.add(latestModVersion);
 					} else {
-						ModgetApi.logInfo(String.format("No update has been found at %s", packageId));
+						ModgetLib.logInfo(String.format("No update has been found at %s", packageId));
 					}
 				}
 			}
