@@ -10,25 +10,30 @@ public class VersionUtilsImpl implements VersionUtils {
 		return new VersionUtilsImpl();
 	}
 
-	
+	@Override
+	public boolean doVersionsMatch(String version1, String version2) throws VersionParsingException {
+		SemanticVersion version1Semantic = SemanticVersion.parse(version1);
+		SemanticVersion version2Semantic = SemanticVersion.parse(version2);
+
+		return doVersionsMatch(version1Semantic, version2Semantic);
+	}
+
+	@Override
+	public boolean doVersionsMatch(SemanticVersion version1, SemanticVersion version2) {
+		if (!isVersionGreaterThan(version1, version2) && !isVersionGreaterThan(version2, version1)) {
+			return true;
+		}
+		return false;
+	}
+
+
 	@Override
 	public boolean isVersionGreaterThan(String version1, String version2) throws VersionParsingException {
-		SemanticVersion version1Semantic;
-		try {
-			version1Semantic = SemanticVersion.parse(version1);
-		} catch (VersionParsingException e) {
-			throw e;
-		}
-		SemanticVersion version2Semantic;
-		try {
-			version2Semantic = SemanticVersion.parse(version2);
-		} catch (VersionParsingException e) {
-			throw e;
-		}
+		SemanticVersion version1Semantic = SemanticVersion.parse(version1);
+		SemanticVersion version2Semantic = SemanticVersion.parse(version2);
 
 		return isVersionGreaterThan(version1Semantic, version2Semantic);
 	}
-
 
 	@Override
 	public boolean isVersionGreaterThan(SemanticVersion version1, SemanticVersion version2) {

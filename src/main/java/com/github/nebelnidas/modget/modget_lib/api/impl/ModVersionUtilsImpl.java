@@ -24,14 +24,28 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 
 	@Override
 	public List<ModVersion> getCompatibleVersions(List<ModVersion> allVersions, String gameVersion) {
-		List<ModVersion> matchingVersions = new ArrayList<>();
+		if (allVersions == null) {
+			return null;
+		}
+		List<ModVersion> compatibleVersions = new ArrayList<>();
 
 		for (ModVersion version : allVersions) {
-			if (version.getMinecraftVersions().contains(gameVersion)) {
-				matchingVersions.add(version);
+			for (String supportedVersion : version.getMinecraftVersions()) {
+
+				try {
+					if (VersionUtilsImpl.create().doVersionsMatch(supportedVersion, gameVersion)) {
+						compatibleVersions.add(version);
+					}
+				} catch (VersionParsingException e) {
+					ModgetLib.logWarn(String.format("Couldn't check if version %s of package Repo%s.%s.%s is compatible with current game version, because it doesn't respect semantic versioning!",
+						supportedVersion, version.getParentManifest().getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
+						version.getParentManifest().getParentPackage().getPublisher(), version.getParentManifest().getParentPackage().getId()
+					), e.getMessage());
+				}
+
 			}
 		}
-		return matchingVersions;
+		return compatibleVersions;
 	}
 
 	@Override
@@ -60,13 +74,8 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 		if (allVersions == null) {
 			return null;
 		}
-		List<ModVersion> compatibleVersions = new ArrayList<>();
+		List<ModVersion> compatibleVersions = getCompatibleVersions(allVersions, gameVersion);
 
-		for (ModVersion modVersion : allVersions) {
-			if (modVersion.getMinecraftVersions().contains(gameVersion)) {
-				compatibleVersions.add(modVersion);
-			}
-		}
 		if (compatibleVersions.size() == 0) {
 			throw new NoCompatibleVersionException();
 		}

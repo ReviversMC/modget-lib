@@ -191,7 +191,7 @@ public class ModgetLibUtilsImpl implements ModgetLibUtils {
 							try {
 								addUpdate(ModVersionUtilsImpl.create().getLatestCompatibleVersion(manifest.getDownloads(), gameVersion));
 							} catch (NoCompatibleVersionException e) {
-								ModgetLib.logInfo(String.format("Package Repo%s.%s.%s has been found, but it's incompatible with the installed Minecraft version",
+								ModgetLib.logInfo(String.format("Package Repo%s.%s.%s has been found, but it's incompatible with the current game version",
 									repo.getId(), pack.getPublisher(), pack.getId()));
 							}
 						}
