@@ -102,6 +102,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 					try {
 						latestModVersion = getLatestCompatibleVersion(manifest.getDownloads(), gameVersion);
 					} catch (NoCompatibleVersionException e1) {
+						ModgetLib.logInfo(String.format("No update has been found at %s", packageId));
 						break;
 					}
 
