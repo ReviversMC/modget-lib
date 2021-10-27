@@ -47,7 +47,7 @@ public class RepoManager {
 	public void addRepo(String url) throws RepoAlreadyExistsException {
 		for (Repository repo : repos) {
 			if (repo.getUri().equals(url)) {
-				throw new RepoAlreadyExistsException();
+				throw new RepoAlreadyExistsException(repo.getId());
 			}
 		}
 		repos.add(new RepositoryImpl(lastId + 1, url));
