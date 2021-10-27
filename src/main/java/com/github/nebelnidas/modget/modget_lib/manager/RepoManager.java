@@ -7,6 +7,7 @@ import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Repository;
 import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.RepositoryImpl;
 import com.github.nebelnidas.modget.modget_lib.ModgetLib;
 import com.github.nebelnidas.modget.modget_lib.exception.NoSuchRepoException;
+import com.github.nebelnidas.modget.modget_lib.exception.RepoAlreadyExistsException;
 
 public class RepoManager {
 	protected List<Repository> repos = new ArrayList<>(2);
@@ -43,7 +44,12 @@ public class RepoManager {
 		return this.repos;
 	}
 
-	public void addRepo(String url) {
+	public void addRepo(String url) throws RepoAlreadyExistsException {
+		for (Repository repo : repos) {
+			if (repo.getUri().equals(url)) {
+				throw new RepoAlreadyExistsException();
+			}
+		}
 		repos.add(new RepositoryImpl(lastId + 1, url));
 		ModgetLib.logInfo(String.format("Repository added: ID='%s'; URI='%s'", lastId + 1, url));
 		lastId++;
