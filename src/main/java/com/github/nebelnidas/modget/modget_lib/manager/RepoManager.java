@@ -64,7 +64,7 @@ public class RepoManager {
 	public void removeRepo(int id) throws NoSuchRepoException {
 		for (int i = 0; i < repos.size(); i++) {
 			if (repos.get(i).getId() == id) {
-                repos.remove(id);
+                repos.remove(i);
                 return;
             }
 		}
