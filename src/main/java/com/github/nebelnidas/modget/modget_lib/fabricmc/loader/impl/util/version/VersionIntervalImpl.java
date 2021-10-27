@@ -46,33 +46,27 @@ public final class VersionIntervalImpl implements VersionInterval {
 		assert min == null || max == null || min instanceof SemanticVersion && max instanceof SemanticVersion || min.equals(max);
 	}
 
-	@Override
 	public boolean isSemantic() {
 		return (min == null || min instanceof SemanticVersion)
 				&& (max == null || max instanceof SemanticVersion);
 	}
 
-	@Override
 	public Version getMin() {
 		return min;
 	}
 
-	@Override
 	public boolean isMinInclusive() {
 		return minInclusive;
 	}
 
-	@Override
 	public Version getMax() {
 		return max;
 	}
 
-	@Override
 	public boolean isMaxInclusive() {
 		return maxInclusive;
 	}
 
-	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof VersionInterval) {
 			VersionInterval o = (VersionInterval) obj;
@@ -84,7 +78,6 @@ public final class VersionIntervalImpl implements VersionInterval {
 		}
 	}
 
-	@Override
 	public String toString() {
 		if (min == null) {
 			if (max == null) {

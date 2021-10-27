@@ -3,14 +3,14 @@ package com.github.nebelnidas.modget.modget_lib.api.impl;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.github.nebelnidas.modget.modget_lib.api.def.VersionUtils;
 import com.github.nebelnidas.modget.modget_lib.fabricmc.loader.api.VersionParsingException;
+import com.github.nebelnidas.modget.modget_lib.util.VersionUtils;
 
 import org.junit.jupiter.api.Test;
 
 
 public class VersionUtilsImplTest {
-	VersionUtils versionUtils = new VersionUtilsImpl();
+	VersionUtils versionUtils = new VersionUtils();
 
 	
 	@Test

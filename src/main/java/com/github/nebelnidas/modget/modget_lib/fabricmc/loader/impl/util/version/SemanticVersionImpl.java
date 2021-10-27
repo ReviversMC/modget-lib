@@ -161,12 +161,10 @@ public class SemanticVersionImpl implements SemanticVersion {
 		friendlyName = fnBuilder.toString();
 	}
 
-	@Override
 	public int getVersionComponentCount() {
 		return components.length;
 	}
 
-	@Override
 	public int getVersionComponent(int pos) {
 		if (pos < 0) {
 			throw new RuntimeException("Tried to access negative version number component!");
@@ -182,22 +180,18 @@ public class SemanticVersionImpl implements SemanticVersion {
 		return components.clone();
 	}
 
-	@Override
 	public Optional<String> getPrereleaseKey() {
 		return Optional.ofNullable(prerelease);
 	}
 
-	@Override
 	public Optional<String> getBuildKey() {
 		return Optional.ofNullable(build);
 	}
 
-	@Override
 	public String getFriendlyString() {
 		return friendlyName;
 	}
 
-	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof SemanticVersionImpl)) {
 			return false;
@@ -212,17 +206,14 @@ public class SemanticVersionImpl implements SemanticVersion {
 		}
 	}
 
-	@Override
 	public int hashCode() {
 		return Arrays.hashCode(components) * 73 + (prerelease != null ? prerelease.hashCode() * 11 : 0) + (build != null ? build.hashCode() : 0);
 	}
 
-	@Override
 	public String toString() {
 		return getFriendlyString();
 	}
 
-	@Override
 	public boolean hasWildcard() {
 		for (int i : components) {
 			if (i < 0) {
@@ -243,7 +234,6 @@ public class SemanticVersionImpl implements SemanticVersion {
 		return true;
 	}
 
-	@Override
 	public int compareTo(Version other) {
 		if (!(other instanceof SemanticVersion)) {
 			return 1;

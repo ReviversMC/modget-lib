@@ -1,4 +1,4 @@
-package com.github.nebelnidas.modget.modget_lib.api.impl;
+package com.github.nebelnidas.modget.modget_lib.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,21 +8,19 @@ import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.RecognizedMod;
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.manifest.Manifest;
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.manifest.ModVersion;
 import com.github.nebelnidas.modget.modget_lib.ModgetLib;
-import com.github.nebelnidas.modget.modget_lib.api.def.ModVersionUtils;
-import com.github.nebelnidas.modget.modget_lib.api.exception.NoCompatibleVersionException;
+import com.github.nebelnidas.modget.modget_lib.exception.NoCompatibleVersionException;
 import com.github.nebelnidas.modget.modget_lib.fabricmc.loader.api.SemanticVersion;
 import com.github.nebelnidas.modget.modget_lib.fabricmc.loader.api.VersionParsingException;
 
 import org.apache.commons.text.WordUtils;
 
-public class ModVersionUtilsImpl implements ModVersionUtils {
+public class ModVersionUtils {
 
-	public static ModVersionUtilsImpl create() {
-		return new ModVersionUtilsImpl();
+	public static ModVersionUtils create() {
+		return new ModVersionUtils();
 	}
 
 
-	@Override
 	public List<ModVersion> getCompatibleVersions(List<ModVersion> allVersions, String gameVersion) {
 		if (allVersions == null) {
 			return null;
@@ -33,7 +31,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 			for (String supportedVersion : version.getMinecraftVersions()) {
 
 				try {
-					if (VersionUtilsImpl.create().doVersionsMatch(supportedVersion, gameVersion)) {
+					if (VersionUtils.create().doVersionsMatch(supportedVersion, gameVersion)) {
 						compatibleVersions.add(version);
 					}
 				} catch (VersionParsingException e) {
@@ -48,7 +46,6 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 		return compatibleVersions;
 	}
 
-	@Override
 	public ModVersion getLatestVersion(List<ModVersion> versions) {
 		if (versions == null) {
 			ModgetLib.logWarn("Cannot look for the latest mod version, because no available versions have been defined!");
@@ -58,7 +55,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 
 		for (ModVersion version : versions) {
 			try {
-				if (VersionUtilsImpl.create().isVersionGreaterThan(version.getVersion(), latestVersion.getVersion())) {
+				if (VersionUtils.create().isVersionGreaterThan(version.getVersion(), latestVersion.getVersion())) {
 					latestVersion = version;
 				}
 			} catch (VersionParsingException e) {
@@ -69,7 +66,6 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 	}
 
 
-	@Override
 	public ModVersion getLatestCompatibleVersion(List<ModVersion> allVersions, String gameVersion) throws NoCompatibleVersionException {
 		if (allVersions == null) {
 			return null;
@@ -83,7 +79,6 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 	}
 
 
-	@Override
 	public List<RecognizedMod> getModsWithUpdates(List<RecognizedMod> mods, String gameVersion) {
 		List<RecognizedMod> modsWithUpdates = new ArrayList<>();
 
@@ -129,7 +124,7 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 					}
 
 					// Check for updates
-					if (VersionUtilsImpl.create().isVersionGreaterThan(latestVersionSemantic, currentVersionSemantic)) {
+					if (VersionUtils.create().isVersionGreaterThan(latestVersionSemantic, currentVersionSemantic)) {
 						ModgetLib.logInfo(String.format("Found an update for %s: %s %s", manifest.getName(),
 							packageId, latestVersionSemantic.toString()));
 

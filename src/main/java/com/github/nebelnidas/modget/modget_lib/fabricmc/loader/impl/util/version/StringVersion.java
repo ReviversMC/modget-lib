@@ -26,12 +26,10 @@ public class StringVersion implements Version {
 		this.version = version;
 	}
 
-	@Override
 	public String getFriendlyString() {
 		return version;
 	}
 
-	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof StringVersion) {
 			return version.equals(((StringVersion) obj).version);
@@ -40,7 +38,6 @@ public class StringVersion implements Version {
 		}
 	}
 
-	@Override
 	public int compareTo(Version o) {
 		if (o instanceof SemanticVersion) {
 			return -1;
@@ -49,7 +46,6 @@ public class StringVersion implements Version {
 		return getFriendlyString().compareTo(o.getFriendlyString());
 	}
 
-	@Override
 	public String toString() {
 		return version;
 	}

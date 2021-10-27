@@ -1,4 +1,4 @@
-package com.github.nebelnidas.modget.modget_lib.api.impl;
+package com.github.nebelnidas.modget.modget_lib.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,18 +14,16 @@ import com.github.nebelnidas.modget.manifest_api.api.v0.impl.ManifestUtilsImpl;
 import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.PackageImpl;
 import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.RecognizedModImpl;
 import com.github.nebelnidas.modget.modget_lib.ModgetLib;
-import com.github.nebelnidas.modget.modget_lib.api.def.ModgetLibUtils;
-import com.github.nebelnidas.modget.modget_lib.api.exception.NoCompatibleVersionException;
+import com.github.nebelnidas.modget.modget_lib.exception.NoCompatibleVersionException;
 
 import org.apache.commons.text.WordUtils;
 
-public class ModgetLibUtilsImpl implements ModgetLibUtils {
+public class ModgetLibUtils {
 
-	public static ModgetLibUtilsImpl create() {
-		return new ModgetLibUtilsImpl();
+	public static ModgetLibUtils create() {
+		return new ModgetLibUtils();
 	}
 
-	@Override
 	public List<RecognizedMod> scanMods(List<RecognizedMod> mods, List<String> ignoredModIds, List<Repository> repos) throws IOException {
 		List<RecognizedMod> recognizedMods = new ArrayList<>();
 		List<Package> packages = new ArrayList<>();
@@ -124,7 +122,6 @@ public class ModgetLibUtilsImpl implements ModgetLibUtils {
 
 
 
-	@Override
 	public List<RecognizedMod> searchForMods(List<Repository> repos, String term, int charsNeededForExtensiveSearch, String gameVersion) throws IOException {
 		float multiplier = 1;
 		List<RecognizedMod> modsFound;
@@ -189,7 +186,7 @@ public class ModgetLibUtilsImpl implements ModgetLibUtils {
 							pack.addManifest(manifest);
 							addAvailablePackage(pack);
 							try {
-								addUpdate(ModVersionUtilsImpl.create().getLatestCompatibleVersion(manifest.getDownloads(), gameVersion));
+								addUpdate(ModVersionUtils.create().getLatestCompatibleVersion(manifest.getDownloads(), gameVersion));
 							} catch (NoCompatibleVersionException e) {
 								ModgetLib.logInfo(String.format("Package Repo%s.%s.%s has been found, but it's incompatible with the current game version",
 									repo.getId(), pack.getPublisher(), pack.getId()));

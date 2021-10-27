@@ -1,4 +1,4 @@
-package com.github.nebelnidas.modget.modget_lib.api.impl;
+package com.github.nebelnidas.modget.modget_lib.manager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,19 +6,17 @@ import java.util.List;
 import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Repository;
 import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.RepositoryImpl;
 import com.github.nebelnidas.modget.modget_lib.ModgetLib;
-import com.github.nebelnidas.modget.modget_lib.api.def.RepoManager;
+import com.github.nebelnidas.modget.modget_lib.exception.NoSuchRepoException;
 
-public class RepoManagerImpl implements RepoManager {
+public class RepoManager {
 	protected List<Repository> repos = new ArrayList<>(2);
 	protected int lastId = -1;
 
 
-	@Override
 	public void init(List<String> repoUris) throws Exception {
 		reload(repoUris);
 	}
 
-	@Override
 	public void reload(List<String> repoUris) throws Exception {
 		repos.clear();
 		lastId = -1;
@@ -27,7 +25,6 @@ public class RepoManagerImpl implements RepoManager {
 		}
 	}
 
-	@Override
 	public void refresh() throws Exception {
 		List<Repository> newRepos = new ArrayList<>();
 		for (Repository repo : repos) {
@@ -42,19 +39,16 @@ public class RepoManagerImpl implements RepoManager {
 		repos = newRepos;
 	}
 
-	@Override
 	public List<Repository> getRepos() {
 		return this.repos;
 	}
 
-	@Override
 	public void addRepo(String url) {
 		repos.add(new RepositoryImpl(lastId + 1, url));
 		ModgetLib.logInfo(String.format("Repository added: ID='%s'; URI='%s'", lastId + 1, url));
 		lastId++;
 	}
 
-	@Override
 	public void initRepos() throws Exception {
 		for (int i = 0; i < repos.size(); i++) {
 			Repository initializedRepo = repos.get(i);
@@ -67,19 +61,38 @@ public class RepoManagerImpl implements RepoManager {
 		}
 	}
 
-	@Override
-	public void removeRepo(int id) {
-		this.repos.remove(id);
+	public void removeRepo(int id) throws NoSuchRepoException {
+		for (int i = 0; i < repos.size(); i++) {
+			if (repos.get(i).getId() == id) {
+                repos.remove(id);
+                return;
+            }
+		}
+		throw new NoSuchRepoException();
 	}
 
-	@Override
-	public void disableRepo(int id) {
-		repos.get(id).setEnabled(false);
+	public void disableRepo(int id) throws NoSuchRepoException  {
+		for (int i = 0; i < repos.size(); i++) {
+			if (repos.get(i).getId() == id) {
+				Repository repo = repos.get(i);
+				repo.setEnabled(false);
+                repos.set(i, repo);
+                return;
+            }
+		}
+		throw new NoSuchRepoException();
 	}
 
-	@Override
-	public void enableRepo(int id) {
-		repos.get(id).setEnabled(true);
+	public void enableRepo(int id) throws NoSuchRepoException  {
+		for (int i = 0; i < repos.size(); i++) {
+			if (repos.get(i).getId() == id) {
+				Repository repo = repos.get(i);
+				repo.setEnabled(true);
+                repos.set(i, repo);
+                return;
+            }
+		}
+		throw new NoSuchRepoException();
 	}
 
 }
