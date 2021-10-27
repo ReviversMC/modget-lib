@@ -98,6 +98,11 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 				Package pack = mod.getAvailablePackages().get(j);
 
 				for (Manifest manifest : pack.getManifests()) {
+					String packageId = String.format("Repo%s.%s.%s",
+						manifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
+						pack.getPublisher(), manifest.getParentLookupTableEntry().getId()
+					);
+
 					ModVersion latestModVersion;
 					try {
 						latestModVersion = getLatestCompatibleVersion(manifest.getDownloads(), gameVersion);
@@ -124,10 +129,6 @@ public class ModVersionUtilsImpl implements ModVersionUtils {
 					}
 
 					// Check for updates
-					String packageId = String.format("Repo%s.%s.%s",
-						manifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
-						pack.getPublisher(), manifest.getParentLookupTableEntry().getId());
-
 					if (VersionUtilsImpl.create().isVersionGreaterThan(latestVersionSemantic, currentVersionSemantic)) {
 						ModgetLib.logInfo(String.format("Found an update for %s: %s %s", manifest.getName(),
 							packageId, latestVersionSemantic.toString()));
