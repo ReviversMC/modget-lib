@@ -9,7 +9,7 @@ import com.github.nebelnidas.modget.modget_lib.util.VersionUtils;
 import org.junit.jupiter.api.Test;
 
 
-public class VersionUtilsImplTest {
+public class VersionUtilsTest {
 	VersionUtils versionUtils = new VersionUtils();
 
 	
