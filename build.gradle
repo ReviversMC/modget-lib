@@ -32,14 +32,8 @@ dependencies {
     // JUnit Jupiter for testing
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
 
-    // log4j for Minecraft compatible logging
-    shadow "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
-    shadow "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
-
-    // commons-text for capitalizing text
-    shadow "org.apache.commons:commons-text:${project.commons_text_version}"
-
-    shadow "com.github.ReviversMC:modget-manifest-api:${modget_manifest_api_version}"
+    // modget-manifest-api
+    shadow implementation("com.github.ReviversMC:modget-manifest-api:${modget_manifest_api_version}")
 
     // spotbugs
     compileOnly "com.github.spotbugs:spotbugs:${project.spotbugs_version}"
