@@ -34,6 +34,7 @@ dependencies {
 
     // modget-manifest-api
     shadow implementation("com.github.ReviversMC:modget-manifest-api:${modget_manifest_api_version}")
+    // shadow implementation(files("libs/modget-manifest-api-0.2.0.jar"))
 
     // spotbugs
     compileOnly "com.github.spotbugs:spotbugs:${project.spotbugs_version}"

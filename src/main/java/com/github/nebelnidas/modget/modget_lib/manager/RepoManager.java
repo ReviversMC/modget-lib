@@ -3,8 +3,8 @@ package com.github.nebelnidas.modget.modget_lib.manager;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Repository;
-import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.RepositoryImpl;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.Repository;
+import com.github.nebelnidas.modget.manifest_api.spec3.impl.data.RepositoryImpl;
 import com.github.nebelnidas.modget.modget_lib.ModgetLib;
 import com.github.nebelnidas.modget.modget_lib.exception.NoSuchRepoException;
 import com.github.nebelnidas.modget.modget_lib.exception.RepoAlreadyExistsException;

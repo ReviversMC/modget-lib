@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Package;
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.RecognizedMod;
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Repository;
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.lookuptable.LookupTable;
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.lookuptable.LookupTableEntry;
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.manifest.Manifest;
-import com.github.nebelnidas.modget.manifest_api.api.v0.impl.ManifestUtilsImpl;
-import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.PackageImpl;
-import com.github.nebelnidas.modget.manifest_api.api.v0.impl.data.RecognizedModImpl;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.Package;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.RecognizedMod;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.Repository;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.lookuptable.LookupTable;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.lookuptable.LookupTableEntry;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.manifest.Manifest;
+import com.github.nebelnidas.modget.manifest_api.spec3.util.ManifestUtils;
+import com.github.nebelnidas.modget.manifest_api.spec3.impl.data.PackageImpl;
+import com.github.nebelnidas.modget.manifest_api.spec3.impl.data.RecognizedModImpl;
 import com.github.nebelnidas.modget.modget_lib.ModgetLib;
 import com.github.nebelnidas.modget.modget_lib.exception.NoCompatibleVersionException;
 
@@ -24,7 +24,7 @@ public class ModgetLibUtils {
 		return new ModgetLibUtils();
 	}
 
-	public List<RecognizedMod> scanMods(List<RecognizedMod> mods, List<String> ignoredModIds, List<Repository> repos) throws IOException {
+	public List<RecognizedMod> scanMods(List<RecognizedMod> mods, List<String> ignoredModIds, List<Repository> repos) throws Exception {
 		List<RecognizedMod> recognizedMods = new ArrayList<>();
 		List<Package> packages = new ArrayList<>();
 		int ignoredModsCount = 0;
@@ -59,7 +59,7 @@ public class ModgetLibUtils {
 								{
 									Package newPackage = packages.get(i);
 									try {
-										newPackage.addManifest(ManifestUtilsImpl.create().downloadManifest(entry, packages.get(i)));
+										newPackage.addManifest(ManifestUtils.create().downloadManifest(entry, packages.get(i)));
 									} catch (Exception e) {
 										throw e;
 									}
@@ -72,7 +72,12 @@ public class ModgetLibUtils {
 							// Otherwise, create a new package
 							if (alreadyExists == false) {
 								Package newPackage = new PackageImpl(packageIdParts[0], packageIdParts[1]);
-								newPackage.addManifest(ManifestUtilsImpl.create().downloadManifest(entry, newPackage));
+								try {
+									newPackage.addManifest(ManifestUtils.create().downloadManifest(entry, newPackage));
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								packages.add(newPackage);
 							}
 						}
@@ -122,7 +127,7 @@ public class ModgetLibUtils {
 
 
 
-	public List<RecognizedMod> searchForMods(List<Repository> repos, String term, int charsNeededForExtensiveSearch, String gameVersion) throws IOException {
+	public List<RecognizedMod> searchForMods(List<Repository> repos, String term, int charsNeededForExtensiveSearch, String gameVersion) throws Exception {
 		float multiplier = 1;
 		List<RecognizedMod> modsFound;
 		List<RecognizedMod> modsFoundPriority0;
@@ -181,8 +186,12 @@ public class ModgetLibUtils {
 						for (String packageId : entry.getPackages()) {
 							String[] packageIdParts = packageId.split("\\.");
 							Package pack = new PackageImpl(packageIdParts[0], packageIdParts[1]);
-
-							Manifest manifest = ManifestUtilsImpl.create().downloadManifest(entry, pack);
+							Manifest manifest;
+							try {
+								manifest = ManifestUtils.create().downloadManifest(entry, pack);
+							} catch (Exception e) {
+								throw e;
+							}
 							pack.addManifest(manifest);
 							addAvailablePackage(pack);
 							try {

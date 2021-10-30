@@ -3,10 +3,10 @@ package com.github.nebelnidas.modget.modget_lib.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.Package;
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.RecognizedMod;
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.manifest.Manifest;
-import com.github.nebelnidas.modget.manifest_api.api.v0.def.data.manifest.ModVersion;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.Package;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.RecognizedMod;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.manifest.Manifest;
+import com.github.nebelnidas.modget.manifest_api.spec3.api.data.manifest.ModVersion;
 import com.github.nebelnidas.modget.modget_lib.ModgetLib;
 import com.github.nebelnidas.modget.modget_lib.exception.NoCompatibleVersionException;
 import com.github.nebelnidas.modget.modget_lib.fabricmc.loader.api.SemanticVersion;
