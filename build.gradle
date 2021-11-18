@@ -8,7 +8,6 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = project.archives_base_name
 version = project.version
 group = project.maven_group
 
@@ -33,8 +32,12 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
 
     // modget-manifest-api
-    shadow implementation("com.github.ReviversMC:modget-manifest-api:${modget_manifest_api_version}")
+    implementation "com.github.ReviversMC.modget-manifest-api:modget-manifest-api-spec4:${modget_manifest_api_version}"
     // shadow implementation(files("libs/modget-manifest-api-0.2.0.jar"))
+
+	// log4j for Minecraft compatible logging
+	implementation "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
+	implementation "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
 
     // spotbugs
     compileOnly "com.github.spotbugs:spotbugs:${project.spotbugs_version}"
