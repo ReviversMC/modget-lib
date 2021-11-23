@@ -12,8 +12,6 @@ import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.Mo
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.InstalledMod;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.ModPackage;
 
-import org.apache.commons.text.WordUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ModVersionUtils {
@@ -99,7 +97,7 @@ public class ModVersionUtils {
 				}
 			} catch (VersionParsingException e) {
 				ModgetLib.logWarn(String.format("Couldn't check if version %s of package Repo%s.%s is compatible with current game version, because it doesn't respect semantic versioning!",
-					gameVersion, modVersion.getParentManifest().getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
+					modVersion.getVersion(), modVersion.getParentManifest().getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
 					modVersion.getParentManifest().getParentPackage().getPackageId()
 				), e.getMessage());
 
@@ -125,28 +123,28 @@ public class ModVersionUtils {
 	 * @return List<ModVersion>
 	 */
 	public List<ModVersion> getModUpdates(InstalledMod mod, String gameVersion, boolean stopOnVersionParsingException) {
-		List<ModVersion> modVersionUpdates = new ArrayList<>();
+		List<ModVersion> updatedModVersions = new ArrayList<>();
 
 		if (mod.getAvailablePackages().size() > 1 || mod.getAvailablePackages().get(0).getManifests().size() > 1) {
-			ModgetLib.logInfo(String.format("There are multiple packages available for %s", WordUtils.capitalize(mod.getId())));
+			ModgetLib.logInfo(String.format("There are multiple packages available for %s", mod.getId()));
 		}
 		for (int j = 0; j < mod.getAvailablePackages().size(); j++) {
 			ModPackage pack = mod.getAvailablePackages().get(j);
 
 			for (ModManifest manifest : pack.getManifests()) {
-				String packageId = String.format("Repo%s.%s",
+				String packageIdWithRepo = String.format("Repo%s.%s",
 					manifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
 					pack.getPackageId()
 				);
 
-				ModVersion latestModVersion = null;;
+				ModVersion latestModVersion = null;
 				try {
 					latestModVersion = getLatestCompatibleVersion(manifest.getVersions(), gameVersion, false);
 				} catch (NoCompatibleVersionException e) {
-					ModgetLib.logInfo(String.format("No update has been found at %s", packageId));
+					ModgetLib.logInfo(String.format("No update has been found at %s", packageIdWithRepo));
 					break;
 				} catch (VersionParsingException e) {
-					// Save to ignore because we already defined above that this error shouldn't be thrown
+					break;
 				}
 
 				// Try parsing the semantic manifest and mod versions
@@ -169,16 +167,16 @@ public class ModVersionUtils {
 				// Check for updates
 				if (VersionUtils.create().isVersionGreaterThan(latestVersionSemantic, currentVersionSemantic)) {
 					ModgetLib.logInfo(String.format("Found an update for %s: %s %s", manifest.getName(),
-						packageId, latestVersionSemantic.toString()));
+						packageIdWithRepo, latestVersionSemantic.getFriendlyString()));
 
-					modVersionUpdates.add(latestModVersion);
+					updatedModVersions.add(latestModVersion);
 				} else {
-					ModgetLib.logInfo(String.format("No update has been found at %s", packageId));
+					ModgetLib.logInfo(String.format("No update has been found at %s", packageIdWithRepo));
 				}
 			}
 		}
 
-		return modVersionUpdates;
+		return updatedModVersions;
 	}
 
 }
