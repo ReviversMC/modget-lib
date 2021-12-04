@@ -33,7 +33,7 @@ dependencies {
 
     // modget-manifest-api
     api "com.github.ReviversMC.modget-manifest-api:modget-manifest-api-spec4:${modget_manifest_api_version}"
-    // shadow implementation(files("libs/modget-manifest-api-0.2.0.jar"))
+    // shadow implementation(files("libs/modget-manifest-api-spec4-0.1.0.jar"))
 
 	// log4j for Minecraft compatible logging
 	implementation "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
