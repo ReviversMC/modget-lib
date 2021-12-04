@@ -1,6 +1,7 @@
 package com.github.reviversmc.modget.library.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.reviversmc.modget.library.ModgetLib;
@@ -131,7 +132,7 @@ public class ModSearcher {
 						// Get all manifests
 						List<ModManifest> modManifests;
 						try {
-							modManifests = modPackage.getOrDownloadManifests(repos);
+							modManifests = modPackage.getOrDownloadManifests(Arrays.asList(repo));
 						} catch (Exception e) {
 							ModgetLib.logWarn(String.format("An error occurred while downloading the manifests for package ", modPackage.getPackageId()), ExceptionUtils.getStackTrace(e));
 							exceptions.add(e);
