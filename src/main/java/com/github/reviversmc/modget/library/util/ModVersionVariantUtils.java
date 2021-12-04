@@ -65,7 +65,7 @@ public class ModVersionVariantUtils {
 				}
 			} catch (VersionParsingException e) {
 				ModgetLib.logWarn(String.format("Couldn't check if version %s of package Repo%s.%s is compatible with current game version, because it doesn't respect semantic versioning!",
-					modVersionVariant.getParentVersion().getVersion(), modManifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
+					modVersion.getVersion(), modManifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
 					modManifest.getParentPackage().getPackageId()
 				), e.getMessage());
 			}

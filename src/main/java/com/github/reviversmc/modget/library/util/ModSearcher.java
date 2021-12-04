@@ -140,8 +140,7 @@ public class ModSearcher {
 
 						for (ModManifest modManifest : modManifests) {
 							String packageIdWithRepo = String.format("Repo%s.%s",
-								modManifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId(),
-								modPackage.getPackageId()
+								repo.getId(), modPackage.getPackageId()
 							);
 							// Get all mod versions
 							List<ModVersion> modVersions;
