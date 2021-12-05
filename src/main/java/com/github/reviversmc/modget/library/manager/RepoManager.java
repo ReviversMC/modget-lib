@@ -16,11 +16,17 @@ public class RepoManager {
 	protected int lastId = -1;
 
 
+	/**
+	 * Initializes the RepoManager and the its ManifestRepositories
+	 */
 	public void init(List<String> repoUris) throws Exception {
 		reload(repoUris);
 		initRepos();
 	}
 
+	/**
+	 * Reloads the RepoManager with a new set of ManifestRepositories
+	 */
 	public void reload(List<String> repoUris) throws Exception {
 		repos.clear();
 		lastId = -1;
@@ -29,6 +35,9 @@ public class RepoManager {
 		}
 	}
 
+	/**
+	 * Refreshes all managed ManifestRepositories
+	 */
 	public void refresh() throws Exception {
 		for (ManifestRepository repo : repos) {
 			try {
@@ -39,10 +48,16 @@ public class RepoManager {
 		}
 	}
 
+	/**
+	 * Get all managed ManifestRepositories
+	 */
 	public List<ManifestRepository> getRepos() {
 		return this.repos;
 	}
 
+	/**
+	 * Adds a new ManifestRepository via its URL
+	 */
 	public void addRepo(String url) throws RepoAlreadyExistsException {
 		for (ManifestRepository repo : repos) {
 			if (repo.getUri().equals(url)) {
@@ -54,7 +69,10 @@ public class RepoManager {
 		lastId++;
 	}
 
-	public void initRepos() throws Exception {
+	/**
+	 * Initializes the managed ManifestRepositories
+	 */
+	private void initRepos() throws Exception {
 		for (ManifestRepository repo : repos) {
 			try {
 				repo.init();
@@ -64,38 +82,25 @@ public class RepoManager {
 		}
 	}
 
+	/**
+	 * Returns the ManifestRepository with the specified ID.
+	 * If no such ManifestRepository exists, throw an exception.
+	 */
+	public ManifestRepository getRepo(int id) throws NoSuchRepoException {
+		for (ManifestRepository repo : repos) {
+			if (repo.getId() == id) {
+                return repo;
+            }
+		}
+		throw new NoSuchRepoException();
+	}
+
+	/**
+	 * Removes the ManifestRepository with the specified ID from the managed repos.
+	 * If no such ManifestRepository exists, throw an exception.
+	 */
 	public void removeRepo(int id) throws NoSuchRepoException {
-		for (int i = 0; i < repos.size(); i++) {
-			if (repos.get(i).getId() == id) {
-                repos.remove(i);
-                return;
-            }
-		}
-		throw new NoSuchRepoException();
-	}
-
-	public void disableRepo(int id) throws NoSuchRepoException  {
-		for (int i = 0; i < repos.size(); i++) {
-			if (repos.get(i).getId() == id) {
-				ManifestRepository repo = repos.get(i);
-				repo.setEnabled(false);
-                repos.set(i, repo);
-                return;
-            }
-		}
-		throw new NoSuchRepoException();
-	}
-
-	public void enableRepo(int id) throws NoSuchRepoException  {
-		for (int i = 0; i < repos.size(); i++) {
-			if (repos.get(i).getId() == id) {
-				ManifestRepository repo = repos.get(i);
-				repo.setEnabled(true);
-                repos.set(i, repo);
-                return;
-            }
-		}
-		throw new NoSuchRepoException();
+		repos.remove(getRepo(id));
 	}
 
 }
