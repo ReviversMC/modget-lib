@@ -20,10 +20,10 @@ public class ModScanner {
 		int ignoredModsCount = 0;
 
 		// TODO: the following block can be removed when `isEnabled` is removed from the API
-		List<ManifestRepository> enabledRepos = repos;
+		List<ManifestRepository> enabledRepos = new ArrayList<>(repos.size());
 		for (ManifestRepository repo : repos) {
-			if (repo.isEnabled() == false) {
-				enabledRepos.remove(repo);
+			if (repo.isEnabled() == true) {
+				enabledRepos.add(repo);
 			}
 		}
 		repos = enabledRepos;
