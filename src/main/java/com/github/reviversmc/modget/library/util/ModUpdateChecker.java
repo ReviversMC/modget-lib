@@ -41,6 +41,16 @@ public class ModUpdateChecker {
 			throw e;
 		}
 
+		// TODO: the following block can be removed when `isEnabled` is removed from the API
+		List<ManifestRepository> enabledRepos = repos;
+		for (ManifestRepository repo : repos) {
+			if (repo.isEnabled() == false) {
+				enabledRepos.remove(repo);
+			}
+		}
+		repos = enabledRepos;
+		// --------------------------------------------
+
 		// Get all packages
 		List<ModPackage> modPackages;
 		try {

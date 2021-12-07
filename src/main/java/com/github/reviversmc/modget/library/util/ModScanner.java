@@ -19,6 +19,15 @@ public class ModScanner {
 		StringBuilder logMessage = new StringBuilder();
 		int ignoredModsCount = 0;
 
+		// TODO: the following block can be removed when `isEnabled` is removed from the API
+		List<ManifestRepository> enabledRepos = repos;
+		for (ManifestRepository repo : repos) {
+			if (repo.isEnabled() == false) {
+				enabledRepos.remove(repo);
+			}
+		}
+		repos = enabledRepos;
+		// --------------------------------------------
 
 		for (InstalledMod installedMod : installedMods) {
 			// If modId is contained in ignore list, skip it
