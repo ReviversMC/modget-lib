@@ -32,9 +32,6 @@ public class ModUpdateChecker {
 	 */
 	public Pair<ModUpdate, List<Exception>> searchForModUpdate(InstalledMod installedMod, List<ManifestRepository> repos, String gameVersion, String modLoader) throws Exception {
 		List<Pair<ManifestRepository, List<ModVersionVariant>>> updatedModVersionVariants = new ArrayList<>(15);
-		for (ManifestRepository repo : repos) {
-			updatedModVersionVariants.add(new MutablePair<>(repo, new ArrayList<>(10)));
-		}
 		List<Exception> exceptions = new ArrayList<>(10);
 
 		// If the mod's version doesn't follow SemVer, we can't compare it
@@ -119,11 +116,19 @@ public class ModUpdateChecker {
 						ModgetLib.logInfo(String.format("Found an update for %s: %s %s", modManifest.getName(),
 							packageIdWithRepo, currentVersionSemantic.getFriendlyString()));
 
+						ManifestRepository repo = modManifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository();
+						boolean added = false;
 						for (Pair<ManifestRepository, List<ModVersionVariant>> pair : updatedModVersionVariants) {
-							if (pair.getLeft().getId() == modManifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId()) {
+							if (pair.getLeft().getId() == repo.getId()) {
 								pair.getRight().add(modVersionVariant);
+								added = true;
 								break;
 							}
+						}
+						if (added == false) {
+							Pair<ManifestRepository, List<ModVersionVariant>> pair = new MutablePair<>(repo, new ArrayList<>(10));
+							pair.getRight().add(modVersionVariant);
+							updatedModVersionVariants.add(pair);
 						}
 					} else {
 						ModgetLib.logInfo(String.format("No update has been found at %s", packageIdWithRepo));
