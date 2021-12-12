@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.reviversmc.modget.library.ModgetLib;
+import com.github.reviversmc.modget.library.data.ModUpdate;
 import com.github.reviversmc.modget.library.exception.NoCompatibleVersionException;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.SemanticVersion;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
@@ -28,16 +29,16 @@ public class ModUpdateChecker {
 	/**
 	 * Gets the latest available {@link ModVersionVariant} with updates from a {@link InstalledMod} for a given game version and mod loader.
 	 */
-	public Pair<ModVersionVariant, List<Exception>> searchForModUpdate(InstalledMod mod, List<ManifestRepository> repos, String gameVersion, String modLoader) throws Exception {
-		List<ModVersionVariant> updatedModVersionVariants = new ArrayList<>(15);
+	public Pair<ModUpdate, List<Exception>> searchForModUpdate(InstalledMod installedMod, List<ManifestRepository> repos, String gameVersion, String modLoader) throws Exception {
+		List<Pair<ManifestRepository, List<ModVersionVariant>>> updatedModVersionVariants = new ArrayList<>(15);
 		List<Exception> exceptions = new ArrayList<>(10);
 
 		// If the mod's version doesn't follow SemVer, we can't compare it
 		SemanticVersion installedVersionSemantic;
 		try {
-			installedVersionSemantic = SemanticVersion.parse(mod.getInstalledVersion());
+			installedVersionSemantic = SemanticVersion.parse(installedMod.getInstalledVersion());
 		} catch (VersionParsingException e) {
-			ModgetLib.logWarn(String.format("%s doesn't respect semantic versioning, an update check is therefore not possible! %s", mod.getId(), e.getMessage()));
+			ModgetLib.logWarn(String.format("%s doesn't respect semantic versioning, an update check is therefore not possible! %s", installedMod.getId(), e.getMessage()));
 			throw e;
 		}
 
@@ -54,9 +55,9 @@ public class ModUpdateChecker {
 		// Get all packages
 		List<ModPackage> modPackages;
 		try {
-			modPackages = mod.getOrDownloadAvailablePackages(repos);
+			modPackages = installedMod.getOrDownloadAvailablePackages(repos);
 		} catch (Exception e) {
-			ModgetLib.logWarn(String.format("An error occurred while downloading the packages for mod ", mod.getId()), ExceptionUtils.getStackTrace(e));
+			ModgetLib.logWarn(String.format("An error occurred while downloading the packages for mod ", installedMod.getId()), ExceptionUtils.getStackTrace(e));
 			throw e;
 		}
 
@@ -114,7 +115,12 @@ public class ModUpdateChecker {
 						ModgetLib.logInfo(String.format("Found an update for %s: %s %s", modManifest.getName(),
 							packageIdWithRepo, currentVersionSemantic.getFriendlyString()));
 
-						updatedModVersionVariants.add(modVersionVariant);
+						for (Pair<ManifestRepository, List<ModVersionVariant>> pair : updatedModVersionVariants) {
+							if (pair.getLeft().getId() == modManifest.getParentLookupTableEntry().getParentLookupTable().getParentRepository().getId()) {
+								pair.getRight().add(modVersionVariant);
+								break;
+							}
+						}
 					} else {
 						ModgetLib.logInfo(String.format("No update has been found at %s", packageIdWithRepo));
 					}
@@ -122,14 +128,19 @@ public class ModUpdateChecker {
 			}
 		}
 
-		ModVersionVariant latestModVersionVariant;
-		try {
-			latestModVersionVariant = ModVersionVariantUtils.create().getLatestCompatibleVersionVariant(updatedModVersionVariants, gameVersion, modLoader);
-		} catch (NoCompatibleVersionException e) {
-			// Shouldn't happen, because we only add compatible versions to the list
-			latestModVersionVariant = null;
+
+		List<Pair<ManifestRepository, ModVersionVariant>> latestUpdatedModVersionVariants = new ArrayList<>(updatedModVersionVariants.size());
+		for (Pair<ManifestRepository, List<ModVersionVariant>> pair : updatedModVersionVariants) {
+			ModVersionVariant latestModVersionVariantOfThisRepo;
+			try {
+				latestModVersionVariantOfThisRepo = ModVersionVariantUtils.create().getLatestCompatibleVersionVariant(pair.getRight(), gameVersion, modLoader);
+			} catch (NoCompatibleVersionException e) {
+				// Shouldn't happen, because we only add compatible versions to the list
+				latestModVersionVariantOfThisRepo = null;
+			}
+			latestUpdatedModVersionVariants.add(new ImmutablePair<>(pair.getLeft(), latestModVersionVariantOfThisRepo));
 		}
-		return new ImmutablePair<>(latestModVersionVariant, exceptions);
+		return new ImmutablePair<>(new ModUpdate(installedMod, latestUpdatedModVersionVariants), exceptions);
 	}
 
 }
