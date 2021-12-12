@@ -129,7 +129,7 @@ public class ModUpdateChecker {
 		}
 
 
-		List<Pair<ManifestRepository, ModVersionVariant>> latestUpdatedModVersionVariants = new ArrayList<>(updatedModVersionVariants.size());
+		List<ModVersionVariant> latestUpdatedModVersionVariants = new ArrayList<>(updatedModVersionVariants.size());
 		for (Pair<ManifestRepository, List<ModVersionVariant>> pair : updatedModVersionVariants) {
 			ModVersionVariant latestModVersionVariantOfThisRepo;
 			try {
@@ -138,7 +138,7 @@ public class ModUpdateChecker {
 				// Shouldn't happen, because we only add compatible versions to the list
 				latestModVersionVariantOfThisRepo = null;
 			}
-			latestUpdatedModVersionVariants.add(new ImmutablePair<>(pair.getLeft(), latestModVersionVariantOfThisRepo));
+			latestUpdatedModVersionVariants.add(latestModVersionVariantOfThisRepo);
 		}
 		return new ImmutablePair<>(new ModUpdate(installedMod, latestUpdatedModVersionVariants), exceptions);
 	}

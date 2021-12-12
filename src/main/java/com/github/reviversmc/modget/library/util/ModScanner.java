@@ -13,9 +13,9 @@ public class ModScanner {
 		return new ModScanner();
 	}
 
-	
-	public List<InstalledMod> scanMods(List<InstalledMod> installedMods, List<String> ignoredModIds, List<ManifestRepository> repos) throws Exception {
-		List<InstalledMod> recognizedMods = new ArrayList<>();
+
+	public <T extends InstalledMod> List<T> scanMods(List<T> installedMods, List<String> ignoredModIds, List<ManifestRepository> repos) throws Exception {
+		List<T> recognizedMods = new ArrayList<>();
 		StringBuilder logMessage = new StringBuilder();
 		int ignoredModsCount = 0;
 
@@ -29,7 +29,7 @@ public class ModScanner {
 		repos = enabledRepos;
 		// --------------------------------------------
 
-		for (InstalledMod installedMod : installedMods) {
+		for (T installedMod : installedMods) {
 			// If modId is contained in ignore list, skip it
 			if (ignoredModIds.contains(installedMod.getId())) {
 				ignoredModsCount++;
