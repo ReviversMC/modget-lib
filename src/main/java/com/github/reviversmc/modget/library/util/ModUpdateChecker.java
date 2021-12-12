@@ -17,6 +17,7 @@ import com.github.reviversmc.modget.manifests.spec4.api.data.mod.ModPackage;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ModUpdateChecker {
@@ -31,6 +32,9 @@ public class ModUpdateChecker {
 	 */
 	public Pair<ModUpdate, List<Exception>> searchForModUpdate(InstalledMod installedMod, List<ManifestRepository> repos, String gameVersion, String modLoader) throws Exception {
 		List<Pair<ManifestRepository, List<ModVersionVariant>>> updatedModVersionVariants = new ArrayList<>(15);
+		for (ManifestRepository repo : repos) {
+			updatedModVersionVariants.add(new MutablePair<>(repo, new ArrayList<>(10)));
+		}
 		List<Exception> exceptions = new ArrayList<>(10);
 
 		// If the mod's version doesn't follow SemVer, we can't compare it
