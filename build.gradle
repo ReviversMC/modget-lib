@@ -32,7 +32,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
 
     // modget-manifest-api
-    api "com.github.ReviversMC.modget-manifest-api:modget-manifest-api-spec4:${modget_manifest_api_version}"
+    api "com.github.ReviversMC.modget-manifest-api:spec4:${modget_manifest_api_version}"
     // shadow implementation(files("libs/modget-manifest-api-spec4-0.1.0.jar"))
 
 	// log4j for Minecraft compatible logging
