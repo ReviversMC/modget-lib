@@ -16,7 +16,6 @@
 
 package com.github.reviversmc.modget.library.fabricmc.loader.api;
 
-import com.github.reviversmc.modget.library.fabricmc.loader.api.metadata.ModMetadata;
 import com.github.reviversmc.modget.library.fabricmc.loader.impl.util.version.VersionParser;
 
 /**
