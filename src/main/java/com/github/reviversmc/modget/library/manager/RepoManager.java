@@ -7,7 +7,7 @@ import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.exception.NoSuchRepoException;
 import com.github.reviversmc.modget.library.exception.RepoAlreadyExistsException;
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
-import com.github.reviversmc.modget.manifests.spec4.impl.data.ManifestRepositoryImpl;
+import com.github.reviversmc.modget.manifests.spec4.impl.data.BasicManifestRepository;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -64,7 +64,7 @@ public class RepoManager {
 				throw new RepoAlreadyExistsException(repo.getId());
 			}
 		}
-		repos.add(new ManifestRepositoryImpl(lastId + 1, url));
+		repos.add(new BasicManifestRepository(lastId + 1, url));
 		ModgetLib.logInfo(String.format("Manifest repository added: ID=%s; URI='%s'", lastId + 1, url));
 		lastId++;
 	}
