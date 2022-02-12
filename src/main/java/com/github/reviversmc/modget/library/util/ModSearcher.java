@@ -52,16 +52,6 @@ public class ModSearcher {
 		versionVariantsFoundPriority0 = new ArrayList<>(Math.round(4 * multiplier));
 
 
-		// TODO: the following block can be removed when `isEnabled` is removed from the API
-		List<ManifestRepository> enabledRepos = new ArrayList<>(repos.size());
-		for (ManifestRepository repo : repos) {
-			if (repo.isEnabled() == true) {
-				enabledRepos.add(repo);
-			}
-		}
-		repos = enabledRepos;
-		// --------------------------------------------
-
 		for (ManifestRepository repo : repos) {
 			// Get the lookup table
 			LookupTable lookupTable;
