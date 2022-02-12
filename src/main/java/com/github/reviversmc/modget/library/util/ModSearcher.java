@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.exception.NoCompatibleVersionException;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
@@ -11,6 +13,7 @@ import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
 import com.github.reviversmc.modget.manifests.spec4.api.data.lookuptable.LookupTable;
 import com.github.reviversmc.modget.manifests.spec4.api.data.lookuptable.LookupTableEntry;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.main.ModManifest;
+import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModLoader;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersion;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersionVariant;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.ModPackage;
@@ -26,9 +29,13 @@ public class ModSearcher {
 	}
 
 
-	public Pair<List<ModVersionVariant>, List<Exception>> searchForCompatibleMods(List<ManifestRepository> repos, String term,
-			int charsNeededForExtensiveSearch, String gameVersion, String modLoader) {
-
+	public Pair<List<ModVersionVariant>, List<Exception>> searchForCompatibleMods(
+			List<ManifestRepository> repos,
+			String term,
+			int charsNeededForExtensiveSearch,
+			@Nullable String gameVersion,
+			@Nullable ModLoader modLoader
+	) {
 		float multiplier = 1;
 		List<ModVersionVariant> versionVariantsFound;
 		List<ModVersionVariant> versionVariantsFoundPriority0;

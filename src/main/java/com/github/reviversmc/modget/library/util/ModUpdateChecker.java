@@ -10,6 +10,7 @@ import com.github.reviversmc.modget.library.fabricmc.loader.api.SemanticVersion;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.main.ModManifest;
+import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModLoader;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersion;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersionVariant;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.InstalledMod;
@@ -30,7 +31,7 @@ public class ModUpdateChecker {
 	/**
 	 * Gets the latest available {@link ModVersionVariant} with updates from a {@link InstalledMod} for a given game version and mod loader.
 	 */
-	public Pair<ModUpdate, List<Exception>> searchForModUpdate(InstalledMod installedMod, List<ManifestRepository> repos, String gameVersion, String modLoader) throws Exception {
+	public Pair<ModUpdate, List<Exception>> searchForModUpdate(InstalledMod installedMod, List<ManifestRepository> repos, String gameVersion, ModLoader modLoader) throws Exception {
 		List<Pair<ManifestRepository, List<ModVersionVariant>>> updatedModVersionVariants = new ArrayList<>(15);
 		List<Exception> exceptions = new ArrayList<>(10);
 
