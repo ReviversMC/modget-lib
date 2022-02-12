@@ -9,19 +9,16 @@ import com.github.reviversmc.modget.library.exception.RepoAlreadyExistsException
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
 import com.github.reviversmc.modget.manifests.spec4.impl.data.BasicManifestRepository;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 public class RepoManager {
 	protected List<ManifestRepository> repos = new ArrayList<>(2);
 	protected int lastId = -1;
 
 
 	/**
-	 * Initializes the RepoManager and the its ManifestRepositories
+	 * Initializes the RepoManager
 	 */
 	public void init(List<String> repoUris) throws Exception {
 		reload(repoUris);
-		initRepos();
 	}
 
 	/**
@@ -32,19 +29,6 @@ public class RepoManager {
 		lastId = -1;
 		for (String uri : repoUris) {
 			addRepo(uri);
-		}
-	}
-
-	/**
-	 * Refreshes all managed ManifestRepositories
-	 */
-	public void refresh() throws Exception {
-		for (ManifestRepository repo : repos) {
-			try {
-				repo.refresh();
-			} catch (Exception e) {
-				ModgetLib.logWarn(String.format("An error occurred while trying to refresh Repo%s", repo.getId()), ExceptionUtils.getStackTrace(e));
-			}
 		}
 	}
 
@@ -64,22 +48,22 @@ public class RepoManager {
 				throw new RepoAlreadyExistsException(repo.getId());
 			}
 		}
-		repos.add(new BasicManifestRepository(lastId + 1, url));
-		ModgetLib.logInfo(String.format("Manifest repository added: ID=%s; URI='%s'", lastId + 1, url));
-		lastId++;
+		repos.add(new BasicManifestRepository(++lastId, url));
+		ModgetLib.logInfo(String.format("Manifest repository added: ID=%s; URI='%s'", lastId, url));
 	}
 
 	/**
-	 * Initializes the managed ManifestRepositories
+	 * Adds a new ManifestRepository and changes its ID to align with the other managed repos
 	 */
-	private void initRepos() throws Exception {
-		for (ManifestRepository repo : repos) {
-			try {
-				repo.init();
-			} catch (Exception e) {
-				ModgetLib.logWarn(String.format("An error occurred while trying to initialize Repo%s", repo.getId()), ExceptionUtils.getStackTrace(e));
+	public void addRepo(ManifestRepository repo) throws RepoAlreadyExistsException {
+		for (ManifestRepository existingRepo : repos) {
+			if (existingRepo.getUri().equals(repo.getUri())) {
+				throw new RepoAlreadyExistsException(existingRepo.getId());
 			}
 		}
+		repo.setId(++lastId);
+		repos.add(repo);
+		ModgetLib.logInfo(String.format("Manifest repository added: ID=%s; URI='%s'", lastId, lastId));
 	}
 
 	/**
