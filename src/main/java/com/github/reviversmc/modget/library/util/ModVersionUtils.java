@@ -7,8 +7,12 @@ import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersion;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 public class ModVersionUtils {
 
 	public static ModVersionUtils create() {

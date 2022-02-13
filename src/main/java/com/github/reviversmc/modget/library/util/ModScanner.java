@@ -7,8 +7,12 @@ import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.InstalledMod;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 public class ModScanner {
 
 	public static ModScanner create() {

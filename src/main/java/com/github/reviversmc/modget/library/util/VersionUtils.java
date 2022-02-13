@@ -3,8 +3,12 @@ package com.github.reviversmc.modget.library.util;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.SemanticVersion;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 public class VersionUtils {
 
 	public static VersionUtils create() {

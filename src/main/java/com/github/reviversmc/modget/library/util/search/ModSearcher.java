@@ -23,8 +23,12 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 public class ModSearcher {
 
 	public static ModSearcher create() {

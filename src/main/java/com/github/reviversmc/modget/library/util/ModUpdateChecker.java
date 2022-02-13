@@ -22,8 +22,12 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 public class ModUpdateChecker {
 
 	public static ModUpdateChecker create() {

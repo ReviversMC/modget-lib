@@ -5,12 +5,15 @@ import java.util.List;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersionVariant;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.InstalledMod;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter
-@Setter
+@ToString
+@EqualsAndHashCode
+@Getter @Setter
 public class ModUpdate {
 	private final InstalledMod installedMod;
 	private List<ModVersionVariant> latestModVersionVariants;

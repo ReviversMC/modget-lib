@@ -1,5 +1,10 @@
 package com.github.reviversmc.modget.library.util.search;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@ToString
+@EqualsAndHashCode
 public class SearchMode {
 	private final boolean extensiveSearch;
 	private final int charsNeededForExtensiveSearch;

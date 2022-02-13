@@ -9,8 +9,12 @@ import com.github.reviversmc.modget.library.exception.RepoAlreadyExistsException
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
 import com.github.reviversmc.modget.manifests.spec4.impl.data.BasicManifestRepository;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 public class RepoManager {
 	protected List<ManifestRepository> repos = new ArrayList<>(2);
 	protected int lastId = -1;
