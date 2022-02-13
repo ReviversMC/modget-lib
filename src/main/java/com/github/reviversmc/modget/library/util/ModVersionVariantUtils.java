@@ -1,8 +1,7 @@
 package com.github.reviversmc.modget.library.util;
 
 import java.util.List;
-
-import javax.annotation.Nullable;
+import java.util.Optional;
 
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.exception.NoCompatibleVersionException;
@@ -11,8 +10,6 @@ import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.main.ModMa
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModLoader;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersion;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersionVariant;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ModVersionVariantUtils {
 
@@ -25,21 +22,21 @@ public class ModVersionVariantUtils {
 	 * Checks if a {@link ModVersionVariant} is compatible with a given game version.
 	 */
 	public boolean isModVersionVariantCompatible(
-			@NonNull ModVersionVariant modVersionVariant,
-			@Nullable String gameVersion,
-			@Nullable ModLoader modLoader
+			ModVersionVariant modVersionVariant,
+			Optional<String> gameVersion,
+			Optional<ModLoader> modLoader
 	) throws VersionParsingException {
-		if (modLoader != null
-			&& !modVersionVariant.getLoaders().contains(modLoader)) {
+		if (modLoader.isPresent()
+			&& !modVersionVariant.getLoaders().contains(modLoader.get())) {
 			// Loader not compatible
 			return false;
 		}
-		if (gameVersion == null) {
+		if (gameVersion.isEmpty()) {
 			return true;
 		}
 		for (String supportedGameVersion : modVersionVariant.getMinecraftVersions()) {
 			try {
-				if (VersionUtils.create().doVersionsMatch(supportedGameVersion, gameVersion)) {
+				if (VersionUtils.create().doVersionsMatch(supportedGameVersion, gameVersion.get())) {
 					return true;
 				}
 			} catch (VersionParsingException e) {
@@ -58,9 +55,9 @@ public class ModVersionVariantUtils {
 	 * Gets the latest {@link ModVersionVariant} compatible with a given game version.
 	 */
 	public ModVersionVariant getLatestCompatibleVersionVariant(
-			@NonNull List<ModVersionVariant> allModVersionVariants,
-			@Nullable String gameVersion,
-			@Nullable ModLoader modLoader
+			List<ModVersionVariant> allModVersionVariants,
+			Optional<String> gameVersion,
+			Optional<ModLoader> modLoader
 	) throws NoCompatibleVersionException {
 		ModVersionVariant latestModVersionVariant = null;
 

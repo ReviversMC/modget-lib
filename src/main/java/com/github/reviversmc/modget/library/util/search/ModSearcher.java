@@ -1,14 +1,15 @@
-package com.github.reviversmc.modget.library.util;
+package com.github.reviversmc.modget.library.util.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.Nullable;
+import java.util.Optional;
 
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.exception.NoCompatibleVersionException;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
+import com.github.reviversmc.modget.library.util.ModVersionVariantUtils;
+import com.github.reviversmc.modget.library.util.VersionUtils;
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
 import com.github.reviversmc.modget.manifests.spec4.api.data.lookuptable.LookupTable;
 import com.github.reviversmc.modget.manifests.spec4.api.data.lookuptable.LookupTableEntry;
@@ -29,27 +30,28 @@ public class ModSearcher {
 	}
 
 
-	public Pair<List<ModVersionVariant>, List<Exception>> searchForCompatibleMods(
+	public Pair<List<ModVersionVariant>, List<Exception>> searchForMods(
 			List<ManifestRepository> repos,
 			String term,
-			int charsNeededForExtensiveSearch,
-			@Nullable String gameVersion,
-			@Nullable ModLoader modLoader
+			SearchMode searchMode,
+			Optional<String> gameVersion,
+			Optional<ModLoader> modLoader
 	) {
-		float multiplier = 1;
+		float arraySizeMultiplier = 1;
 		List<ModVersionVariant> versionVariantsFound;
 		List<ModVersionVariant> versionVariantsFoundPriority0;
 		List<ModVersionVariant> versionVariantsFoundPriority1 = null;
 		List<ModVersionVariant> versionVariantsFoundPriority2 = null;
 		List<Exception> exceptions = new ArrayList<>(10);
 
-		if (term.length() >= charsNeededForExtensiveSearch) {
-			multiplier += charsNeededForExtensiveSearch / term.length();
-			versionVariantsFoundPriority1 = new ArrayList<>(Math.round(4 * multiplier));
-			versionVariantsFoundPriority2 = new ArrayList<>(Math.round(4 * multiplier));
+		if (searchMode.doesExtensiveSearch()
+				&& term.length() >= searchMode.getCharsNeededForExtensiveSearch()) {
+			arraySizeMultiplier += searchMode.getCharsNeededForExtensiveSearch() / term.length();
+			versionVariantsFoundPriority1 = new ArrayList<>(Math.round(4 * arraySizeMultiplier));
+			versionVariantsFoundPriority2 = new ArrayList<>(Math.round(4 * arraySizeMultiplier));
 		}
-		versionVariantsFound = new ArrayList<>(Math.round(8 * multiplier));
-		versionVariantsFoundPriority0 = new ArrayList<>(Math.round(4 * multiplier));
+		versionVariantsFound = new ArrayList<>(Math.round(8 * arraySizeMultiplier));
+		versionVariantsFoundPriority0 = new ArrayList<>(Math.round(4 * arraySizeMultiplier));
 
 
 		for (ManifestRepository repo : repos) {
@@ -87,25 +89,34 @@ public class ModSearcher {
 				int priority = 0;
 
 				// Does the packageId match?
-				for (ModPackage modPackage : modPackages) {
-					if (modPackage.getPackageId().equalsIgnoreCase(term)) {
-						recognized = true;
-					}
-				}
-				// Does the modId match?
-				if (recognized == false && entry.getId().equalsIgnoreCase(term)) {
-					recognized = true;
-				}
-				// Does an alternative name match?
-				if (recognized == false) {
-					for (String name : entry.getAlternativeNames()) {
-						if (name.equalsIgnoreCase(term)) {
+				if (searchMode.doesPackageIdSearch()) {
+					for (ModPackage modPackage : modPackages) {
+						if (modPackage.getPackageId().equalsIgnoreCase(term)) {
 							recognized = true;
 						}
 					}
 				}
+				// Does the modId match?
+				if (searchMode.doesModIdSearch()) {
+					if (recognized == false && entry.getId().equalsIgnoreCase(term)) {
+						recognized = true;
+					}
+				}
+				// Does an alternative name match?
+				if (searchMode.doesAlternativeNameSearch()) {
+					if (recognized == false) {
+						for (String name : entry.getAlternativeNames()) {
+							if (name.equalsIgnoreCase(term)) {
+								recognized = true;
+							}
+						}
+					}
+				}
 				// Does the term contain parts of the packageId?
-				if (recognized == false && term.length() >= charsNeededForExtensiveSearch) {
+				if (recognized == false
+						&& searchMode.doesPackageIdSearch()
+						&& searchMode.doesExtensiveSearch()
+						&& term.length() >= searchMode.getCharsNeededForExtensiveSearch()) {
 					for (ModPackage modPackage : modPackages) {
 						if (modPackage.getPackageId().toLowerCase().contains(term.toLowerCase())) {
 							recognized = true;
@@ -114,7 +125,10 @@ public class ModSearcher {
 					}
 				}
 				// Does the term contain parts of an alternative name?
-				if (recognized == false && term.length() >= charsNeededForExtensiveSearch) {
+				if (recognized == false
+						&& searchMode.doesAlternativeNameSearch()
+						&& searchMode.doesExtensiveSearch()
+						&& term.length() >= searchMode.getCharsNeededForExtensiveSearch()) {
 					for (String name : entry.getAlternativeNames()) {
 						if (name.toLowerCase().contains(term.toLowerCase())) {
 							recognized = true;
@@ -123,7 +137,10 @@ public class ModSearcher {
 					}
 				}
 				// Does the term contain parts of a tag?
-				if (recognized == false && term.length() >= charsNeededForExtensiveSearch) {
+				if (recognized == false
+						&& searchMode.doesTagSearch()
+						&& searchMode.doesExtensiveSearch()
+						&& term.length() >= searchMode.getCharsNeededForExtensiveSearch()) {
 					for (String tag : entry.getTags()) {
 						if (tag.toLowerCase().contains(term.toLowerCase())) {
 							recognized = true;
@@ -206,7 +223,8 @@ public class ModSearcher {
 			}
 		}
 		versionVariantsFound.addAll(versionVariantsFoundPriority0);
-		if (term.length() >= charsNeededForExtensiveSearch) {
+		if (searchMode.doesExtensiveSearch()
+				&& term.length() >= searchMode.getCharsNeededForExtensiveSearch()) {
 			versionVariantsFound.addAll(versionVariantsFoundPriority1);
 			versionVariantsFound.addAll(versionVariantsFoundPriority2);
 		}

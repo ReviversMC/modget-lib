@@ -1,6 +1,7 @@
 package com.github.reviversmc.modget.library.util;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
@@ -21,10 +22,10 @@ public class ModVersionUtils {
 	 * @param versions		the {@link List} of {@link ModVersion} objects to be checked
 	 * @return ModVersion	the {@link ModVersion} with the highest version number
 	 */
-	public ModVersion getLatestVersion(@NonNull List<ModVersion> versions) throws VersionParsingException {
+	public Optional<ModVersion> getLatestVersion(@NonNull List<ModVersion> versions) throws VersionParsingException {
 		if (versions.size() == 0) {
 			ModgetLib.logWarn("Cannot look for the latest mod version, because no available versions have been defined!");
-			return null;
+			return Optional.empty();
 		}
 		ModVersion latestVersion = versions.get(0);
 
@@ -38,7 +39,7 @@ public class ModVersionUtils {
 				throw e;
 			}
 		}
-		return latestVersion;
+		return Optional.of(latestVersion);
 	}
 
 }
