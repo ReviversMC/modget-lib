@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.data.ModUpdate;
 import com.github.reviversmc.modget.library.exception.NoCompatibleVersionException;
@@ -40,10 +42,10 @@ public class ModUpdateChecker {
 	 * {@link InstalledMod} for a given game version and mod loader.
 	 */
 	public Pair<ModUpdate, List<Exception>> searchForModUpdate(
-			@NonNull InstalledMod installedMod,
-			@NonNull List<ManifestRepository> repos,
-			@NonNull String gameVersion,
-			@NonNull ModLoader modLoader
+			@NonNull @Nonnull InstalledMod installedMod,
+			@NonNull @Nonnull List<ManifestRepository> repos,
+			@NonNull @Nonnull String gameVersion,
+			@NonNull @Nonnull ModLoader modLoader
 	) throws Exception {
 		List<Pair<ManifestRepository, List<ModVersionVariant>>> updatedModVersionVariants = new ArrayList<>(15);
 		List<Exception> exceptions = new ArrayList<>(10);

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.exception.NoCompatibleVersionException;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
@@ -37,11 +39,11 @@ public class ModSearcher {
 
 
 	public Pair<List<ModVersionVariant>, List<Exception>> searchForMods(
-			@NonNull List<ManifestRepository> repos,
-			@NonNull String term,
-			@NonNull SearchMode searchMode,
-			@NonNull Optional<String> gameVersion,
-			@NonNull Optional<ModLoader> modLoader
+			@NonNull @Nonnull List<ManifestRepository> repos,
+			@NonNull @Nonnull String term,
+			@NonNull @Nonnull SearchMode searchMode,
+			@NonNull @Nonnull Optional<String> gameVersion,
+			@NonNull @Nonnull Optional<ModLoader> modLoader
 	) {
 		float arraySizeMultiplier = 1;
 		List<ModVersionVariant> versionVariantsFound;

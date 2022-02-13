@@ -1,5 +1,7 @@
 package com.github.reviversmc.modget.library.util;
 
+import javax.annotation.Nonnull;
+
 import com.github.reviversmc.modget.library.fabricmc.loader.api.SemanticVersion;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
 
@@ -17,8 +19,8 @@ public class VersionUtils {
 
 
 	public boolean doVersionsMatch(
-			@NonNull String version1,
-			@NonNull String version2
+			@NonNull @Nonnull String version1,
+			@NonNull @Nonnull String version2
 	) throws VersionParsingException {
 		SemanticVersion version1Semantic = SemanticVersion.parse(version1);
 		SemanticVersion version2Semantic = SemanticVersion.parse(version2);
@@ -28,8 +30,8 @@ public class VersionUtils {
 
 
 	public boolean doVersionsMatch(
-		@NonNull SemanticVersion version1,
-		@NonNull SemanticVersion version2
+		@NonNull @Nonnull SemanticVersion version1,
+		@NonNull @Nonnull SemanticVersion version2
 	) {
 		if (!isVersionGreaterThan(version1, version2) && !isVersionGreaterThan(version2, version1)) {
 			return true;
@@ -39,8 +41,8 @@ public class VersionUtils {
 
 
 	public boolean isVersionGreaterThan(
-			@NonNull String version1,
-			@NonNull String version2
+			@NonNull @Nonnull String version1,
+			@NonNull @Nonnull String version2
 	) throws VersionParsingException {
 		SemanticVersion version1Semantic = SemanticVersion.parse(version1);
 		SemanticVersion version2Semantic = SemanticVersion.parse(version2);
@@ -50,8 +52,8 @@ public class VersionUtils {
 
 
 	public boolean isVersionGreaterThan(
-			@NonNull SemanticVersion version1,
-			@NonNull SemanticVersion version2
+			@NonNull @Nonnull SemanticVersion version1,
+			@NonNull @Nonnull SemanticVersion version2
 	) {
 		if (version1.compareTo(version2) > 0) {
 			return true;

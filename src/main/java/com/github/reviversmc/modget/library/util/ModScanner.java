@@ -3,6 +3,8 @@ package com.github.reviversmc.modget.library.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.InstalledMod;
@@ -21,9 +23,9 @@ public class ModScanner {
 
 
 	public <T extends InstalledMod> List<T> scanMods(
-			@NonNull List<T> installedMods,
-			@NonNull List<String> ignoredModIds,
-			@NonNull List<ManifestRepository> repos
+			@NonNull @Nonnull List<T> installedMods,
+			@NonNull @Nonnull List<String> ignoredModIds,
+			@NonNull @Nonnull List<ManifestRepository> repos
 	) throws Exception {
 		List<T> recognizedMods = new ArrayList<>();
 		StringBuilder logMessage = new StringBuilder();

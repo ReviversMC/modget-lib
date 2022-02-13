@@ -2,6 +2,8 @@ package com.github.reviversmc.modget.library.data;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersionVariant;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.InstalledMod;
 
@@ -20,8 +22,8 @@ public class ModUpdate {
 
 
 	public ModUpdate(
-			@NonNull InstalledMod installedMod,
-			@NonNull List<ModVersionVariant> latestModVersionVariants) {
+			@NonNull @Nonnull InstalledMod installedMod,
+			@NonNull @Nonnull List<ModVersionVariant> latestModVersionVariants) {
 		this.installedMod = installedMod;
 		this.latestModVersionVariants = latestModVersionVariants;
 	}

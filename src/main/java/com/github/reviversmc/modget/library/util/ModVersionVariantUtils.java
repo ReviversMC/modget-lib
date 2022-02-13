@@ -3,6 +3,8 @@ package com.github.reviversmc.modget.library.util;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.exception.NoCompatibleVersionException;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
@@ -28,9 +30,9 @@ public class ModVersionVariantUtils {
 	 * Checks if a {@link ModVersionVariant} is compatible with a given game version.
 	 */
 	public boolean isModVersionVariantCompatible(
-			@NonNull ModVersionVariant modVersionVariant,
-			@NonNull Optional<String> gameVersion,
-			@NonNull Optional<ModLoader> modLoader
+			@NonNull @Nonnull ModVersionVariant modVersionVariant,
+			@NonNull @Nonnull Optional<String> gameVersion,
+			@NonNull @Nonnull Optional<ModLoader> modLoader
 	) throws VersionParsingException {
 		if (modLoader.isPresent()
 			&& !modVersionVariant.getLoaders().contains(modLoader.get())) {
@@ -61,9 +63,9 @@ public class ModVersionVariantUtils {
 	 * Gets the latest {@link ModVersionVariant} compatible with a given game version.
 	 */
 	public ModVersionVariant getLatestCompatibleVersionVariant(
-			@NonNull List<ModVersionVariant> allModVersionVariants,
-			@NonNull Optional<String> gameVersion,
-			@NonNull Optional<ModLoader> modLoader
+			@NonNull @Nonnull List<ModVersionVariant> allModVersionVariants,
+			@NonNull @Nonnull Optional<String> gameVersion,
+			@NonNull @Nonnull Optional<ModLoader> modLoader
 	) throws NoCompatibleVersionException {
 		ModVersionVariant latestModVersionVariant = null;
 

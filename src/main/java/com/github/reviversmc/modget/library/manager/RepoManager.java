@@ -3,6 +3,8 @@ package com.github.reviversmc.modget.library.manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.exception.NoSuchRepoException;
 import com.github.reviversmc.modget.library.exception.RepoAlreadyExistsException;
@@ -23,14 +25,14 @@ public class RepoManager {
 	/**
 	 * Initializes the RepoManager
 	 */
-	public void init(@NonNull List<String> repoUris) throws Exception {
+	public void init(@NonNull @Nonnull List<String> repoUris) throws Exception {
 		reload(repoUris);
 	}
 
 	/**
 	 * Reloads the RepoManager with a new set of ManifestRepositories
 	 */
-	public void reload(@NonNull List<String> repoUris) throws Exception {
+	public void reload(@NonNull @Nonnull List<String> repoUris) throws Exception {
 		repos.clear();
 		lastId = -1;
 		for (String uri : repoUris) {
@@ -48,7 +50,7 @@ public class RepoManager {
 	/**
 	 * Adds a new ManifestRepository via its URL
 	 */
-	public void addRepo(@NonNull String url) throws RepoAlreadyExistsException {
+	public void addRepo(@NonNull @Nonnull String url) throws RepoAlreadyExistsException {
 		for (ManifestRepository repo : repos) {
 			if (repo.getUri().equals(url)) {
 				throw new RepoAlreadyExistsException(repo.getId());
@@ -61,7 +63,7 @@ public class RepoManager {
 	/**
 	 * Adds a new ManifestRepository and changes its ID to align with the other managed repos
 	 */
-	public void addRepo(@NonNull ManifestRepository repo) throws RepoAlreadyExistsException {
+	public void addRepo(@NonNull @Nonnull ManifestRepository repo) throws RepoAlreadyExistsException {
 		for (ManifestRepository existingRepo : repos) {
 			if (existingRepo.getUri().equals(repo.getUri())) {
 				throw new RepoAlreadyExistsException(existingRepo.getId());
