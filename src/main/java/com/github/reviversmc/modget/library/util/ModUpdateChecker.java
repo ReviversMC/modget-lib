@@ -22,6 +22,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import lombok.NonNull;
+
 public class ModUpdateChecker {
 
 	public static ModUpdateChecker create() {
@@ -34,10 +36,10 @@ public class ModUpdateChecker {
 	 * {@link InstalledMod} for a given game version and mod loader.
 	 */
 	public Pair<ModUpdate, List<Exception>> searchForModUpdate(
-			InstalledMod installedMod,
-			List<ManifestRepository> repos,
-			String gameVersion,
-			ModLoader modLoader
+			@NonNull InstalledMod installedMod,
+			@NonNull List<ManifestRepository> repos,
+			@NonNull String gameVersion,
+			@NonNull ModLoader modLoader
 	) throws Exception {
 		List<Pair<ManifestRepository, List<ModVersionVariant>>> updatedModVersionVariants = new ArrayList<>(15);
 		List<Exception> exceptions = new ArrayList<>(10);

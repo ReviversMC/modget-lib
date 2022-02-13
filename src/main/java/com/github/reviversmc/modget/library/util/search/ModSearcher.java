@@ -23,6 +23,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import lombok.NonNull;
+
 public class ModSearcher {
 
 	public static ModSearcher create() {
@@ -31,11 +33,11 @@ public class ModSearcher {
 
 
 	public Pair<List<ModVersionVariant>, List<Exception>> searchForMods(
-			List<ManifestRepository> repos,
-			String term,
-			SearchMode searchMode,
-			Optional<String> gameVersion,
-			Optional<ModLoader> modLoader
+			@NonNull List<ManifestRepository> repos,
+			@NonNull String term,
+			@NonNull SearchMode searchMode,
+			@NonNull Optional<String> gameVersion,
+			@NonNull Optional<ModLoader> modLoader
 	) {
 		float arraySizeMultiplier = 1;
 		List<ModVersionVariant> versionVariantsFound;

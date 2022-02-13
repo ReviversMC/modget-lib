@@ -45,6 +45,9 @@ dependencies {
 	implementation "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
 	implementation "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
 
+    // Lombok for null checks
+    implementation "org.projectlombok:lombok:${project.lombok_version}"
+
     // Commons IO for downloading files
     implementation "commons-io:commons-io:${project.commons_io_version}"
 

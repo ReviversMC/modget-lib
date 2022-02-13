@@ -11,6 +11,8 @@ import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.Mo
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersion;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersionVariant;
 
+import lombok.NonNull;
+
 public class ModVersionVariantUtils {
 
 	public static ModVersionVariantUtils create() {
@@ -22,9 +24,9 @@ public class ModVersionVariantUtils {
 	 * Checks if a {@link ModVersionVariant} is compatible with a given game version.
 	 */
 	public boolean isModVersionVariantCompatible(
-			ModVersionVariant modVersionVariant,
-			Optional<String> gameVersion,
-			Optional<ModLoader> modLoader
+			@NonNull ModVersionVariant modVersionVariant,
+			@NonNull Optional<String> gameVersion,
+			@NonNull Optional<ModLoader> modLoader
 	) throws VersionParsingException {
 		if (modLoader.isPresent()
 			&& !modVersionVariant.getLoaders().contains(modLoader.get())) {
@@ -55,9 +57,9 @@ public class ModVersionVariantUtils {
 	 * Gets the latest {@link ModVersionVariant} compatible with a given game version.
 	 */
 	public ModVersionVariant getLatestCompatibleVersionVariant(
-			List<ModVersionVariant> allModVersionVariants,
-			Optional<String> gameVersion,
-			Optional<ModLoader> modLoader
+			@NonNull List<ModVersionVariant> allModVersionVariants,
+			@NonNull Optional<String> gameVersion,
+			@NonNull Optional<ModLoader> modLoader
 	) throws NoCompatibleVersionException {
 		ModVersionVariant latestModVersionVariant = null;
 

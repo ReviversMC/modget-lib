@@ -7,7 +7,7 @@ import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersion;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import lombok.NonNull;
 
 public class ModVersionUtils {
 

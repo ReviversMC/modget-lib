@@ -7,6 +7,8 @@ import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.InstalledMod;
 
+import lombok.NonNull;
+
 public class ModScanner {
 
 	public static ModScanner create() {
@@ -14,7 +16,11 @@ public class ModScanner {
 	}
 
 
-	public <T extends InstalledMod> List<T> scanMods(List<T> installedMods, List<String> ignoredModIds, List<ManifestRepository> repos) throws Exception {
+	public <T extends InstalledMod> List<T> scanMods(
+			@NonNull List<T> installedMods,
+			@NonNull List<String> ignoredModIds,
+			@NonNull List<ManifestRepository> repos
+	) throws Exception {
 		List<T> recognizedMods = new ArrayList<>();
 		StringBuilder logMessage = new StringBuilder();
 		int ignoredModsCount = 0;
