@@ -13,10 +13,10 @@ import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingEx
 import com.github.reviversmc.modget.library.util.ModVersionVariantUtils;
 import com.github.reviversmc.modget.library.util.VersionUtils;
 import com.github.reviversmc.modget.manifests.spec4.api.data.ManifestRepository;
+import com.github.reviversmc.modget.manifests.spec4.api.data.common.ModLoader;
 import com.github.reviversmc.modget.manifests.spec4.api.data.lookuptable.LookupTable;
 import com.github.reviversmc.modget.manifests.spec4.api.data.lookuptable.LookupTableEntry;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.main.ModManifest;
-import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModLoader;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersion;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersionVariant;
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.ModPackage;

@@ -8,8 +8,8 @@ import javax.annotation.Nonnull;
 import com.github.reviversmc.modget.library.ModgetLib;
 import com.github.reviversmc.modget.library.exception.NoCompatibleVersionException;
 import com.github.reviversmc.modget.library.fabricmc.loader.api.VersionParsingException;
+import com.github.reviversmc.modget.manifests.spec4.api.data.common.ModLoader;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.main.ModManifest;
-import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModLoader;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersion;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.version.ModVersionVariant;
 
